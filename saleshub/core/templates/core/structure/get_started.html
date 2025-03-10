@@ -1,0 +1,170 @@
+{% extends 'core/structure/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/structure/get_started.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">Streamline Your Sales Planning for Maximum Growth</h1>
+            <p class="hero-subtitle">Transform your sales strategy with our intuitive tools and insights.</p>
+            <a href="#get-started" class="cta-button">Start Planning Today</a>
+        </div>
+        <div class="hero-image">
+            <img src="{% static 'images/image.jpeg' %}" alt="Sales Planning Tools" />
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="container">
+        <h2 class="features-title">Key Features</h2>
+        <div class="features-grid">
+            <div class="feature">
+                <div class="feature-icon">
+                    <img src="{% static 'images/monitor.png' %}" alt="Feature 1 Icon" />
+                </div>
+                <h3 class="feature-title">Data-Driven Insights</h3>
+                <p class="feature-description">Leverage powerful analytics to make informed sales decisions.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">
+                    <img src="{% static 'images/dashboard.png' %}" alt="Feature 2 Icon" />
+                </div>
+                <h3 class="feature-title">Customizable Dashboards</h3>
+                <p class="feature-description">Create dashboards that fit your specific needs and preferences.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">
+                    <img src="{% static 'images/collaboration.png' %}" alt="Feature 3 Icon" />
+                </div>
+                <h3 class="feature-title">Real-Time Collaboration</h3>
+                <p class="feature-description">Work seamlessly with your team in real-time.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">
+                    <img src="{% static 'images/graph.png' %}" alt="Feature 4 Icon" />
+                </div>
+                <h3 class="feature-title">Automated Reporting</h3>
+                <p class="feature-description">Generate reports automatically, saving time and effort.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="benefits">
+    <div class="container">
+        <h2 class="benefits-title">Why Choose Us?</h2>
+        <div class="benefits-list">
+            <div class="benefit">
+                <h3 class="benefit-title">Increased Sales Efficiency</h3>
+                <p class="benefit-description">Our tools help streamline your sales processes, allowing your team to focus on closing deals.</p>
+            </div>
+            <div class="benefit">
+                <h3 class="benefit-title">Enhanced Team Collaboration</h3>
+                <p class="benefit-description">Collaborate in real-time with your team to improve communication and workflow.</p>
+            </div>
+            <div class="benefit">
+                <h3 class="benefit-title">Customizable Dashboards</h3>
+                <p class="benefit-description">Personalize your dashboard to track the metrics that matter most to you.</p>
+            </div>
+            <div class="benefit">
+                <h3 class="benefit-title">Real-Time Reporting</h3>
+                <p class="benefit-description">Get instant access to reports and insights to make data-driven decisions.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="use-cases">
+    <div class="container">
+        <h2 class="use-cases-title">Use Cases</h2>
+        <div class="use-cases-list">
+            <div class="use-case">
+                <h3 class="use-case-title">Sales Forecasting</h3>
+                <p class="use-case-description">Predict future sales trends based on historical data and market analysis.</p>
+            </div>
+            <div class="use-case">
+                <h3 class="use-case-title">Lead Management</h3>
+                <p class="use-case-description">Track and nurture leads throughout the sales funnel to improve conversion rates.</p>
+            </div>
+            <div class="use-case">
+                <h3 class="use-case-title">Performance Tracking</h3>
+                <p class="use-case-description">Monitor team performance and set benchmarks to drive improvement.</p>
+            </div>
+            <div class="use-case">
+                <h3 class="use-case-title">Market Analysis</h3>
+                <p class="use-case-description">Analyze market trends and customer behaviors to optimize your sales strategy.</p>
+            </div>
+            <div class="use-case">
+                <h3 class="use-case-title">Customer Relationship Management</h3>
+                <p class="use-case-description">Manage customer interactions and data throughout the customer lifecycle.</p>
+            </div>
+            <div class="use-case">
+                <h3 class="use-case-title">Automated Reporting</h3>
+                <p class="use-case-description">Generate comprehensive reports with minimal manual effort.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="resources">
+    <div class="container">
+        <h2 class="resources-title">Resources</h2>
+        <div class="resources-grid">
+            <div class="resource-card">
+                <h3 class="resource-title">Sales Planning Guide</h3>
+                <p class="resource-description">A comprehensive guide to planning and executing your sales strategy effectively.</p>
+                <a href="#guide" class="resource-link">Read More</a>
+            </div>
+            <div class="resource-card">
+                <h3 class="resource-title">Top 10 Sales Tips</h3>
+                <p class="resource-description">Discover the best practices for boosting your sales performance.</p>
+                <a href="#tips" class="resource-link">Read More</a>
+            </div>
+            <div class="resource-card">
+                <h3 class="resource-title">Webinar: Maximizing Sales Efficiency</h3>
+                <p class="resource-description">Join our expert-led webinar to learn strategies for improving sales efficiency.</p>
+                <a href="#webinar" class="resource-link">Register Now</a>
+            </div>
+            <div class="resource-card">
+                <h3 class="resource-title">Case Study: Successful Sales Strategies</h3>
+                <p class="resource-description">Explore real-world examples of companies that excelled in sales planning.</p>
+                <a href="#case-study" class="resource-link">Read More</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="faq">
+    <div class="container">
+        <h2 class="faq-title">Frequently Asked Questions</h2>
+        <div class="faq-list">
+            <div class="faq-item">
+                <h3 class="faq-question">What is Sales Planning?</h3>
+                <p class="faq-answer">Sales Planning is the process of setting sales goals, defining strategies, and allocating resources to achieve those goals.</p>
+            </div>
+            <div class="faq-item">
+                <h3 class="faq-question">How can I improve my sales efficiency?</h3>
+                <p class="faq-answer">Utilize our tools to streamline processes, enhance team collaboration, and track performance metrics effectively.</p>
+            </div>
+            <div class="faq-item">
+                <h3 class="faq-question">What support do you offer?</h3>
+                <p class="faq-answer">We provide 24/7 customer support through chat and email, along with extensive documentation and resources.</p>
+            </div>
+            <div class="faq-item">
+                <h3 class="faq-question">Is there a free trial available?</h3>
+                <p class="faq-answer">Yes, we offer a 14-day free trial that allows you to explore all features of our Sales Planning tool.</p>
+            </div>
+            <div class="faq-item">
+                <h3 class="faq-question">Can I customize my plan?</h3>
+                <p class="faq-answer">Absolutely! We offer customizable plans to fit your specific business needs and goals.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

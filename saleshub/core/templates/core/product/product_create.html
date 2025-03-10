@@ -1,0 +1,61 @@
+{% extends 'core/structure/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/product/create_product.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="create-product-container">
+    <h2>Create New Product</h2>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <p class="success-message">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="id_name">Product Name:</label>
+            {{ form.name }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_short_description">Short Description:</label>
+            {{ form.short_description }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_description">Description:</label>
+            {{ form.description }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_category">Category:</label>
+            {{ form.category }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_sold_to">Sold To:</label>
+            {{ form.sold_to }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_location">Location:</label>
+            {{ form.location }}
+        </div>
+        
+        <div class="form-group">
+            <label for="id_image">Product Image (optional):</label>
+            {{ form.image }}
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn-submit">Create Product</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

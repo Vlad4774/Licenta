@@ -1,0 +1,54 @@
+/* General Styling */
+.product-container {
+    display: flex;
+    width: 100%;
+    height: 715px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Sidebar Section: 25% width */
+.product-sidebar {
+    width: 25%;
+    margin-top: 75px;
+    padding: 20px;
+    background-color: black;
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+}
+
+/* Grid Section: 75% width */
+.product-grid-container {
+    width: 75%;
+    margin-top: 75px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+
+.tab-button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.tab-button:hover {
+    background-color: #0056b3;
+}
+
+/* AG Grid Container */
+#myGrid {
+    flex-grow: 1;
+    height: 100%; /* Ensures the grid fills the container */
+    width: 100%;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}

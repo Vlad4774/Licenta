@@ -1,0 +1,77 @@
+{% load static %}
+{% load custom_filters %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/structure/base.css' %}">
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+<header class="saleshub-header">
+    <div class="saleshub-container">
+        <div class="saleshub-logo">
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'home' %}">
+                <h1>SalesHub</h1>
+            </a>
+            {% else %}
+            <a href="{% url 'get_started' %}">
+                <h1>SalesHub</h1>
+            </a>
+            {% endif %}
+        </div>
+        
+        {% if request.path == '/' or request.path == '/login/' %}
+        <nav class="saleshub-navigation">
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#blog">Blog</a></li> 
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+        {% endif %}
+
+        {% if request.path == '/' %}
+        <nav class="saleshub-login">
+            <div class="saleshub-login-button">
+                <a href="{% url 'login' %}">Login</a>
+            </div>
+        </nav>
+        {% endif %}
+
+        {% if request.path == '/home/' or request.path|is_production_page %}
+        <div class="saleshub-search-bar">
+            <input type="text" placeholder="Search product or category" />
+        </div>
+
+        <div class="saleshub-profile">
+            <img src="{% static 'images/profile.jpg' %}" alt="Profile Picture" class="saleshub-profile-pic" />
+            <div class="saleshub-profile-info">
+                <p class="saleshub-profile-name">{{ request.user.username }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div> 
+</header>
+
+{% block content %}{% endblock %}
+
+{% if request.path == '/' or request.path == '/login/'%}
+<footer class="saleshub-footer">
+    <div class="saleshub-container">
+         <h3 class="saleshub-footer-title">Contact Us</h3>
+                <p>Email: <a href="vladbaracut7@yahoo.com">support@salesHub.com</a></p>
+                <p>Phone: <a href="tel:+1234567890">+1 234 567 890</a></p>
+                <p>&copy; 2024 SalesHub. All rights reserved.</p>
+    </div>
+</footer>
+{% endif %}
+
+</body>
+</html>

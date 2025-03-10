@@ -1,0 +1,50 @@
+{% extends 'core/structure/base.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/project_styles.css' %}">
+
+
+{% block content %}
+<h2>{% if object %}Edit Project{% else %}Create Project{% endif %}</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="id_name">Project Name:</label>
+        {{ form.name }}
+    </div>
+    <div class="form-group">
+        <label for="id_customer">Customer:</label>
+        {{ form.customer }}
+    </div>
+    <div class="form-group">
+        <label for="id_acquisition_status">Acquisition Status:</label>
+        {{ form.acquisition_status }}
+    </div>
+    <div class="form-group">
+        <label for="id_acquisition_probability">Acquisition Probability (%):</label>
+        {{ form.acquisition_probability }}
+    </div>
+    <div class="form-group">
+        <label for="id_dos">Date of Start (DOS):</label>
+        {{ form.dos }}
+    </div>
+    <div class="form-group">
+        <label for="id_sop">Start of Production (SOP):</label>
+        {{ form.sop }}
+    </div>
+    <div class="form-group">
+        <label for="id_eop">End of Production (EOP):</label>
+        {{ form.eop }}
+    </div>
+    <div class="form-group">
+        <label for="id_responsible">Responsible:</label>
+        {{ form.responsible }}
+    </div>
+    <div class="form-group">
+        <label for="id_products">Products:</label>
+        {{ form.products }}
+    </div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="{% url 'project_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

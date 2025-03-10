@@ -1,0 +1,104 @@
+
+h2 {
+    color: #00bcd4;
+    text-align: center;
+    padding-top: 7%;
+}
+
+.btn-primary {
+    margin: 10px;
+    background-color: green;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-left: 83.5%;
+}
+
+.btn-primary:hover {
+    background-color: #008c9e;
+}
+
+/* Table Styling */
+.table {
+    width: 90%;
+    margin-top: 1%;
+    margin-left: 5%;
+    margin-right: 5%;
+    background-color: #2c2c2c;
+}
+
+.table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #00bcd4;
+}
+
+.table th {
+    background-color: #0097a7;
+    color: white;
+    text-transform: uppercase;
+}
+
+.table tr:nth-child(even) {
+    background-color: #333;
+}
+
+/* Table Links */
+.table a {
+    color: #00bcd4;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.table a:hover {
+    text-decoration: underline;
+}
+
+/* Buttons Styling */
+.btn {
+    padding: 8px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.btn-warning {
+    background-color: #f0ad4e;
+    color: white;
+}
+
+.btn-warning:hover {
+    background-color: #ec971f;
+}
+
+.btn-danger {
+    background-color: #d9534f;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c9302c;
+}
+
+/* Center No Projects Message */
+.table td[colspan="6"] {
+    text-align: center;
+    font-style: italic;
+    color: #bbb;
+}
+
+/* Responsive Styling */
+@media screen and (max-width: 768px) {
+    .table th, .table td {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .btn {
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+}

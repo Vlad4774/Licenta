@@ -1,0 +1,122 @@
+/* General Styles for the Form */
+form {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff; /* White background for the form */
+    border: 1px solid #e0e0e0; /* Light gray border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Styling for form labels */
+form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333333; /* Dark text color */
+}
+
+/* Styling for form input, textarea, and select fields */
+form input, 
+form textarea, 
+form select {
+    width: 100%; /* Full width */
+    padding: 10px; /* Inner padding */
+    margin-bottom: 15px; /* Space between fields */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 4px; /* Rounded corners */
+    box-sizing: border-box; /* Include padding in width/height */
+    font-size: 14px;
+}
+
+/* Placeholder text styling */
+form input::placeholder,
+form textarea::placeholder {
+    color: #999999; /* Light gray for placeholder text */
+}
+
+/* Submit Button Styling */
+form .btn-submit {
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    border: none; /* No border */
+    padding: 10px 20px; /* Padding for the button */
+    font-size: 16px; /* Larger font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 4px; /* Rounded corners */
+    text-align: center; /* Center text */
+    display: block; /* Block layout */
+    width: 100%; /* Full width */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Hover effect for the submit button */
+form .btn-submit:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+/* Error Messages Styling */
+form .error {
+    color: #d9534f; /* Red color for errors */
+    font-size: 13px;
+    margin-top: -10px; /* Close to the input field */
+    margin-bottom: 10px;
+}
+
+/* Fieldset or category headers (if used) */
+form fieldset {
+    border: none; /* Remove default border */
+    margin: 20px 0; /* Spacing around fieldsets */
+    padding: 0; /* Remove inner padding */
+}
+
+form legend {
+    font-size: 18px; /* Larger font size */
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Special styling for textarea fields */
+form textarea {
+    resize: vertical; /* Allow vertical resizing only */
+}
+
+/* Styling for select dropdowns */
+form select {
+    background-color: #f9f9f9; /* Light background */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    form {
+        padding: 15px; /* Adjust padding on smaller screens */
+    }
+
+    form .btn-submit {
+        font-size: 14px; /* Smaller font for button */
+    }
+}
+
+/* General Styles for Labels and Inputs (to align with base.css) */
+form label,
+form input,
+form select,
+form textarea {
+    font-family: Arial, sans-serif; /* Same font as base.css */
+    color: #ffffff; /* White text color for inputs */
+}
+
+/* Placeholder for input fields */
+form input::placeholder,
+form textarea::placeholder {
+    color: #bbb; /* Light gray for placeholders */
+}
+
+/* Input Fields (avoid conflict with base.css) */
+form input, 
+form select,
+form textarea {
+    border: 1px solid #ccc; /* Default border for consistency */
+}
+

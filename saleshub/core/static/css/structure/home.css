@@ -1,0 +1,126 @@
+/* Section Styles for Button Section */
+.button-section {
+    background-color: #1f1f1f; /* Dark background */
+    padding: 20px 0; /* Padding for the section */
+    text-align: center; /* Center text */
+}
+
+.button-section-title {
+    color: #00bcd4; /* Title color */
+    margin-bottom: 30px; /* Space below the title */
+    font-size: 24px; /* Title font size */
+}
+
+.button-group {
+    display: flex; /* Flexbox for button layout */
+    justify-content: center; /* Center buttons */
+    flex-wrap: wrap; /* Allow buttons to wrap */
+    gap: 15px; /* Space between buttons */
+    margin: 50px auto; /* Center group in section */
+}
+
+.button {
+    background-color: #00bcd4; /* Button background color */
+    color: #ffffff; /* Text color for buttons */
+    padding: 10px 15px; /* Padding for the buttons */
+    text-decoration: none; /* Remove underline */
+    border-radius: 5px; /* Rounded corners for buttons */
+    text-align: center; /* Center text inside buttons */
+    flex: 1; /* Allow buttons to grow */
+    min-width: 120px; /* Minimum width for buttons */
+}
+
+/* Hover effect for buttons */
+.button:hover {
+    background-color: #008c9e; /* Darker highlight color */
+    transform: translateY(-2px); /* Lift effect on hover */
+}
+
+/* Section Styles for Info Section */
+.info-section {
+    display: flex; /* Flexbox for layout */
+    justify-content: space-between; /* Space between parts */
+    border-top: 2px solid #ffffff; /* Top border for the section */
+    padding: 20px 0; /* Padding for section */
+    background-color: #1f1f1f; /* Dark background */
+}
+
+.info-part {
+    flex: 1; /* Each part takes equal width */
+    margin: 0 10px; /* Space between parts */
+    padding: 15px; /* Padding inside each part */
+    color: #ffffff; /* Text color */
+    border-left: 1px solid #ffffff; /* Border for separation */
+    min-height: 500px;
+}
+
+.info-part h3 {
+    color: #00bcd4;
+    /* margin-bottom: 10px; */
+    text-align: center;
+}
+
+/* Containerul general pentru lista de produse */
+.info-part.left {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    max-height: 400px; /* Înălțime maximă */
+    overflow-y: auto; /* Adaugă scroll vertical */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Titlul */
+.info-part.left h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #00bcd4;
+    margin-bottom: 10px;
+    text-align: center;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 5px;
+}
+
+/* Lista de produse */
+.product-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Elementele individuale din listă */
+.product-item {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.product-item:hover {
+    background-color: #f0f0f0;
+}
+
+/* Link-ul produsului */
+.product-item a {
+    font-size: 16px;
+    font-weight: bold;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.product-item a:hover {
+    text-decoration: underline;
+}
+
+/* Descrierea scurtă */
+.short-description {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+    line-height: 1.4;
+}
+
+
+
+

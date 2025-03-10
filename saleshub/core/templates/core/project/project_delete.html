@@ -1,0 +1,14 @@
+{% extends 'core/structure/base.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/project_styles.css' %}">
+
+{% block content %}
+<h2>Confirm Deletion</h2>
+<p>Are you sure you want to delete the project <strong>{{ object.name }}</strong>?</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a href="{% url 'project_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
