@@ -65,6 +65,15 @@ h2 {
     transition: 0.3s;
 }
 
+.btn-view {
+    background-color: green;
+    color: white;
+}
+
+.btn-view:hover {
+    background-color: rgb(26, 173, 26);
+}
+
 .btn-warning {
     background-color: #f0ad4e;
     color: white;

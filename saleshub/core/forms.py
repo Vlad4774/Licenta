@@ -13,7 +13,7 @@ class ProductForm(forms.ModelForm):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['name', 'customer', 'acquisition_status', 'acquisition_probability', 'dos', 'sop', 'eop', 'responsible', 'products']
+        fields = ['name', 'customer', 'acquisition_status', 'acquisition_probability', 'dos', 'sop', 'eop', 'products']
         widgets = {
             'dos': forms.DateInput(attrs={'type': 'date'}),
             'sop': forms.DateInput(attrs={'type': 'date'}),

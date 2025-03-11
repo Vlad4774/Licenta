@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import User
 
 from django.db import models
 
@@ -44,11 +44,11 @@ class Project(models.Model):
     name = models.CharField(max_length=255)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     acquisition_status = models.CharField(max_length=20, choices=ACQUISITION_STATUS_CHOICES, default='pending')
-    acquisition_probability = models.DecimalField(max_digits=5, decimal_places=2, help_text="Probability in percentage")
+    acquisition_probability = models.DecimalField(max_digits=5, decimal_places=2)
     dos = models.DateField(verbose_name="Date of Start")
     sop = models.DateField(verbose_name="Start of Production")
     eop = models.DateField(verbose_name="End of Production")
-    responsible = models.CharField(max_length=255, help_text="Person responsible for the project")
+    responsible = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, default=1)
     products = models.ManyToManyField('Product', related_name='projects', blank=True)
 
     def __str__(self):

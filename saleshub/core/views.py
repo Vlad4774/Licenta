@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db import transaction
-from .forms import ProductForm
+from .forms import ProductForm, ProjectForm
 
 @login_required
 def home(request):
@@ -108,12 +108,23 @@ def create_product(request):
 
 @login_required
 def show_projects(request):
-    projects = Project.objects.all() 
-    return render(request, 'core/project/project_list.html', {'projects': projects})
+    projects = Project.objects.all(); 
+    return render(request, 'core/project/project_read.html', {'projects': projects})
 
 @login_required
-def create_project(request):
-    return render(request, 'core/project/project_create.html')
+def create_or_edit_project(request):
+    if request.method == "POST":
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            project = form.save(commit=False)
+            project.responsible = request.user
+            project.save()
+            return redirect('project_list')  
+
+    else:
+        form = ProjectForm()
+
+    return render(request, 'core/project/project_create.html', {'form': form})
 
 @login_required
 def view_project(request, id):

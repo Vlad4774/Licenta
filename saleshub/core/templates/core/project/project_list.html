@@ -7,7 +7,7 @@
 
 {% block content %}
 <h2>Project List</h2>
-<a href="{% url 'project_create' %}" class="create">Create New Project</a>
+<a href="{% url 'project_create_or_edit' %}" class="create">Create New Project</a>
 <table class="table">
     <thead>
         <tr>
@@ -28,7 +28,8 @@
             <td>{{ project.acquisition_probability }}%</td>
             <td>{{ project.responsible }}</td>
             <td>
-                <a href="{% url 'project_update' project.id %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'project_read' project.id %}" class="btn btn-view">View</a>
+                <a href="{% url 'project_create_or_edit' project.id %}" class="btn btn-warning">Edit</a>
                 <a href="{% url 'project_delete' project.id %}" class="btn btn-danger">Delete</a>
             </td>
         </tr>

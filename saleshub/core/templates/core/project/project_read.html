@@ -2,7 +2,7 @@
 
 {% load static %}
 {% block head %}
-<link rel="stylesheet" href="{% static 'css/project/project_dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'css/project/project_read.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -51,7 +51,7 @@
         </div>
         
         <div class="mt-3">
-            <a href="{% url 'project_update' project.pk %}" class="edit">Edit Project</a>
+            <a href="{% url 'project_create_or_edit' %}" class="edit">Edit Project</a>
             <a href="{% url 'project_list' %}" class="delete">Delete project</a>
         </div>
     </div>
