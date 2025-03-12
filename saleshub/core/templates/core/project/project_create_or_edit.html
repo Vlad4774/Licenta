@@ -47,7 +47,7 @@
         <label for="id_products">Products:</label>
         {{ form.products }}
     </div>
-    <button type="submit" class="btn btn-success">Save</button>
+    <button type="submit" class="btn btn-success">{% if object %}Update{% else %}Save{% endif %}</button>
     <a href="{% url 'project_list' %}" class="btn btn-secondary">Cancel</a>
 </form>
 {% endblock %}

@@ -1,23 +1,68 @@
-/* Container principal */
-.container{
-    background-color: #1f1f1f; /* Fundal întunecat */
-    padding: 20px;
-    border-radius: 8px;
-    color: white;
+/* ============================== */
+/*        CONTAINER GENERAL       */
+/* ============================== */
+
+.container {
+    max-width: 1100px; /* Fix pentru lățimea conținutului */
+    margin: 50px auto; /* Centrare pe pagină și spațiere */
+    padding: 30px;
+    background-color: #1f1f1f; /* Fundal */
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Titluri */
-h2, h3 {
+/* ============================== */
+/*          TITLU PROIECT         */
+/* ============================== */
+
+h2.text-primary {
     color: #00bcd4;
-    text-align: left;
-    margin-bottom: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
-/* Tabel */
+/* ============================== */
+/*     INFORMAȚII PROIECT         */
+/* ============================== */
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+/* Casetă informații proiect */
+.col-md-4 {
+    background-color: #2c2c2c;
+    padding: 15px;
+    border-radius: 5px;
+    flex: 1;
+    min-width: 280px;
+}
+
+.col-md-4 p {
+    margin: 8px 0;
+}
+
+.col-md-4 strong {
+    color: #00bcd4;
+}
+
+/* ============================== */
+/*          TABEL PRODUSE         */
+/* ============================== */
+
+.table-responsive {
+    width: 100%;
+    margin-top: 20px;
+}
+
 .table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #2c2c2c;
+    background-color: #1f1f1f;
     color: white;
     border-radius: 8px;
     overflow: hidden;
@@ -32,37 +77,88 @@ h2, h3 {
 .table th {
     background-color: #0097a7;
     color: white;
+    font-weight: bold;
 }
 
-/* Butoane de acțiune */
-.action-buttons {
-    margin-top: 15px;
+/* Alternare culori pe rânduri */
+.table tr:nth-child(even) {
+    background-color: #2c2c2c;
 }
 
-.btn {
-    display: inline-block;
-    padding: 8px 12px;
-    border-radius: 5px;
+/* Link produs */
+.table a {
+    color: #00bcd4;
     text-decoration: none;
     font-weight: bold;
-    transition: 0.3s;
-    margin-right: 10px;
 }
 
-.btn-edit {
+.table a:hover {
+    text-decoration: underline;
+}
+
+/* ============================== */
+/*         BUTOANE EDITARE        */
+/* ============================== */
+
+.mt-3 {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.mt-3 a {
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+/* Buton edit */
+.mt-3 .edit {
     background-color: #f0ad4e;
     color: white;
 }
 
-.btn-edit:hover {
+.mt-3 .edit:hover {
     background-color: #ec971f;
 }
 
-.btn-delete {
+/* Buton delete */
+.mt-3 .delete {
     background-color: #d9534f;
     color: white;
 }
 
-.btn-delete:hover {
+.mt-3 .delete:hover {
     background-color: #c9302c;
+}
+
+/* ============================== */
+/*        RESPONSIVE FIXES        */
+/* ============================== */
+
+@media screen and (max-width: 768px) {
+    .row {
+        flex-direction: column;
+    }
+
+    .table th, .table td {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .mt-3 {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .mt-3 a {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
 }

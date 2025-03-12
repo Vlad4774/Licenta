@@ -53,6 +53,15 @@ class Project(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.customer.name})"
+    
+
+class Item(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.product.name} for {self.project.name} in {self.location}"
 
 class Volume(models.Model):
     product = models.ForeignKey(Product, related_name='volumes', on_delete=models.CASCADE)

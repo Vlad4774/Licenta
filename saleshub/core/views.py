@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as auth_login, authenticate, logout
 from django.contrib.auth.decorators import login_required 
-from .models import Product, Pricing, Volume, Cost, Project
+from .models import Product, Pricing, Volume, Cost, Project, Item
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db import transaction
-from .forms import ProductForm, ProjectForm
+from .forms import ProductForm, ProjectForm, ItemForm
 
 @login_required
 def home(request):
@@ -109,12 +109,17 @@ def create_product(request):
 @login_required
 def show_projects(request):
     projects = Project.objects.all(); 
-    return render(request, 'core/project/project_read.html', {'projects': projects})
+    return render(request, 'core/project/project_list.html', {'projects': projects})
 
 @login_required
-def create_or_edit_project(request):
+def create_or_edit_project(request, id=None):
+    if id:
+        project = get_object_or_404(Project, id=id)
+    else:
+        project = None
+
     if request.method == "POST":
-        form = ProjectForm(request.POST)
+        form = ProjectForm(request.POST, instance = project)
         if form.is_valid():
             project = form.save(commit=False)
             project.responsible = request.user
@@ -122,9 +127,9 @@ def create_or_edit_project(request):
             return redirect('project_list')  
 
     else:
-        form = ProjectForm()
+        form = ProjectForm(instance=project)
 
-    return render(request, 'core/project/project_create.html', {'form': form})
+    return render(request, 'core/project/project_create_or_edit.html', {'form': form, 'object' : project})
 
 @login_required
 def view_project(request, id):
@@ -134,6 +139,27 @@ def view_project(request, id):
 @login_required
 def delete_project(request, id):
     project = get_object_or_404(Project, id=id)
+
+    if request.method == "POST":
+        project.delete()
+        return redirect('project_list')
+
     return render(request, 'core/project/project_delete.html', {'project': project})
+
+
+def add_item_to_project(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+
+    if request.method == "POST":
+        form = ItemForm(request.POST)
+        if form.is_valid():
+            item = form.save(commit=False)
+            item.project = project  # Asociem item-ul cu proiectul curent
+            item.save()
+            return redirect('project_read', project_id=project.id)
+    else:
+        form = ItemForm()
+
+    return render(request, 'core/item/item_create.html', {'form': form, 'project': project})
 
     

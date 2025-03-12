@@ -11,7 +11,8 @@ urlpatterns = [
     path('product/create', views.create_product, name='create_product'),
     path('project/', views.show_projects, name='project_list'),
     path('project/<int:id>', views.view_project, name='project_read'),
-    path('project/<int:id>/edit/', views.show_projects, name='project_update'),
     path('project/<int:id>/delete/', views.delete_project, name='project_delete'),
-    path('project/new/', views.create_or_edit_project, name='project_create_or_edit'),
+    path('project/new/', views.create_or_edit_project, name='project_create'),
+    path('project/<int:id>/edit/', views.create_or_edit_project, name='project_edit'),
+    path('project/<int:project_id>/add-item/', views.add_item_to_project, name='add_item_to_project'),
 ]

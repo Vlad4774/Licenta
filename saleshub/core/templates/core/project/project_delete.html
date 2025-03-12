@@ -1,14 +1,21 @@
 {% extends 'core/structure/base.html' %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/project_styles.css' %}">
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/project/project_delete.css' %}">
+{% endblock %}
 
 {% block content %}
-<h2>Confirm Deletion</h2>
-<p>Are you sure you want to delete the project <strong>{{ object.name }}</strong>?</p>
+<div class="delete-container">
+    <h2>Are you sure you want to delete "{{ project.name }}"?</h2>
+    <p>This action cannot be undone.</p>
 
-<form method="POST">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Yes, Delete</button>
-    <a href="{% url 'project_list' %}" class="btn btn-secondary">Cancel</a>
-</form>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="delete-buttons">
+            <button type="submit" class="btn-danger">Yes, Delete</button>
+            <a href="{% url 'project_list' %}" class="btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
 {% endblock %}

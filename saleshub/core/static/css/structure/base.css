@@ -1,25 +1,27 @@
+/* ============================= */
+/*        GENERAL STYLES         */
+/* ============================= */
 
-.saleshub-body {
+body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #121212; /* Dark background */
-    color: #ffffff; /* White text */
+    background-color: #121212; /* Dark mode */
+    color: #ffffff; /* Text alb */
+    padding-top: 80px; /* Evită suprapunerea cu header-ul fix */
 }
 
-.saleshub-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
+/* ============================= */
+/*        HEADER & NAVBAR        */
+/* ============================= */
 
 .saleshub-header {
     background-color: #1f1f1f;
     padding: 20px 0;
     position: fixed;
+    top: 0;
     width: 100%;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .saleshub-header .saleshub-container {
@@ -28,13 +30,14 @@
     align-items: center;
 }
 
+/* Logo */
 .saleshub-logo h1 {
     margin: 0;
     font-size: 24px;
     color: #00bcd4;
 }
 
-/* Navigation Styles */
+/* Navigation Bar */
 .saleshub-navigation {
     display: flex;
     align-items: center;
@@ -64,79 +67,54 @@
     color: #00bcd4;
 }
 
-/* Login Button */
-.saleshub-login-button {
-    margin-left: auto;
-}
+/* ============================= */
+/*        CONTAINER STYLES       */
+/* ============================= */
 
-.saleshub-login-button a {
-    text-decoration: none;
-    background-color: #00bcd4;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-    display: inline-block;
-}
-
-.saleshub-login-button a:hover {
-    background-color: #008c9e;
-}
-
-/* Buttons */
-.saleshub-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.saleshub-button-primary {
-    background-color: #0097a7;
-    color: white;
-}
-
-.saleshub-button-primary:hover {
-    background-color: #007f8c;
-}
-
-.saleshub-button-secondary {
-    background-color: #00bcd4;
-    color: white;
-}
-
-.saleshub-button-secondary:hover {
-    background-color: #008c9e;
-}
-
-/* Footer Styles */
-.saleshub-footer {
-    background-color: #0097a7;
-    color: #ffffff;
-    padding: 20px 0;
-    font-size: 15px;
-    height: 150px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.saleshub-footer .saleshub-container {
+/* Layout general */
+.saleshub-container {
     max-width: 1200px;
-    height: 150px;
     margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Container pentru paginile individuale */
+.page-container {
+    max-width: 90%;
+    margin: 100px auto 0; /* Spațiu sub header */
+    padding: 20px;
+}
+
+/* ============================= */
+/*          SEARCH BAR           */
+/* ============================= */
+
+.saleshub-search-bar {
     display: flex;
-    flex-direction: column;
     align-items: center;
+    background-color: #2c2c2c;
+    border-radius: 25px;
+    padding: 5px 15px;
+    max-width: 400px;
 }
 
-.saleshub-footer p {
-    margin-bottom: 1px;
+.saleshub-search-bar input {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    padding: 10px;
+    font-size: 16px;
+    flex-grow: 1;
 }
 
-/* Profile Styles */
+.saleshub-search-bar input::placeholder {
+    color: #a1a1a1;
+}
+
+/* ============================= */
+/*        PROFILE STYLES         */
+/* ============================= */
+
 .saleshub-profile {
     display: flex;
     align-items: center;
@@ -165,30 +143,74 @@
     font-weight: bold;
 }
 
-/* Search Bar Styles */
-.saleshub-search-bar {
-    display: flex;
-    align-items: center;
-    background-color: #2c2c2c;
-    border-radius: 25px;
-    padding: 5px 15px;
-    max-width: 400px;
-}
+/* ============================= */
+/*          BUTTONS              */
+/* ============================= */
 
-.saleshub-search-bar input {
-    background: transparent;
-    border: none;
-    color: #ffffff;
-    padding: 10px;
+/* General button styles */
+.saleshub-button {
+    padding: 10px 20px;
     font-size: 16px;
-    flex-grow: 1;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    text-decoration: none;
 }
 
-.saleshub-search-bar input::placeholder {
-    color: #a1a1a1;
+/* Primary button */
+.saleshub-button-primary {
+    background-color: #0097a7;
+    color: white;
 }
 
-/* Responsive adjustments */
+.saleshub-button-primary:hover {
+    background-color: #007f8c;
+}
+
+/* Secondary button */
+.saleshub-button-secondary {
+    background-color: #00bcd4;
+    color: white;
+}
+
+.saleshub-button-secondary:hover {
+    background-color: #008c9e;
+}
+
+/* ============================= */
+/*          FOOTER               */
+/* ============================= */
+
+.saleshub-footer {
+    background-color: #0097a7;
+    color: #ffffff;
+    padding: 20px 0;
+    font-size: 15px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.saleshub-footer .saleshub-container {
+    max-width: 1200px;
+    height: 150px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.saleshub-footer p {
+    margin-bottom: 5px;
+}
+
+/* ============================= */
+/*        RESPONSIVE FIXES       */
+/* ============================= */
+
 @media screen and (max-width: 768px) {
     .saleshub-navigation {
         flex-direction: column;
@@ -208,45 +230,9 @@
         flex-direction: column;
         align-items: flex-start;
     }
-    
+
     .saleshub-footer {
         flex-direction: column;
         align-items: flex-start;
     }
-    
-    .saleshub-cta-button {
-        margin-top: 10px;
-    }
-}
-
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #121212; /* Dark background */
-    color: #ffffff; /* White text */
-}
-
-/* Global Container */
-.container {
-    max-width: 1200px; /* Limit max width */
-    margin: 0 auto; /* Center the container */
-    padding: 0 20px; /* Padding */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* Global Buttons */
-.cta-button {
-    background-color: #00bcd4; /* CTA button color */
-    color: #ffffff;
-    padding: 15px 30px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-
-.cta-button:hover {
-    background-color: #0097a7;
 }

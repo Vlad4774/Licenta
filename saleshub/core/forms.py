@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, Category, Customer, Location, Project
+from .models import Product, Category, Customer, Location, Project, Item
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -21,3 +21,9 @@ class ProjectForm(forms.ModelForm):
             'acquisition_probability': forms.NumberInput(attrs={'min': 0, 'max': 100, 'step': 0.01}),
             'products': forms.SelectMultiple(attrs={'size': 5}),
         }
+
+
+class ItemForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = ['product', 'location']
