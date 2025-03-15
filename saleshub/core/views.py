@@ -146,7 +146,6 @@ def delete_project(request, id):
 
     return render(request, 'core/project/project_delete.html', {'project': project})
 
-
 def add_item_to_project(request, project_id):
     project = get_object_or_404(Project, id=project_id)
 
@@ -154,12 +153,178 @@ def add_item_to_project(request, project_id):
         form = ItemForm(request.POST)
         if form.is_valid():
             item = form.save(commit=False)
-            item.project = project  # Asociem item-ul cu proiectul curent
+            item.project = project
             item.save()
-            return redirect('project_read', project_id=project.id)
+
+            current_year = 2025
+            schedule_years = form.cleaned_data.get('schedule_years', 5)
+
+            for i in range(schedule_years):
+                year = current_year + i
+
+                Volume.objects.create(
+                    item=item,
+                    year=year,
+                    min_volume=None,
+                    expected_volume=None,
+                    max_volume=None
+                )
+
+                Pricing.objects.create(
+                    item=item,
+                    year=year,
+                    base_price=None,
+                    packaging_price=None,
+                    transport_price=None,
+                    warehouse_price=None
+                )
+
+                Cost.objects.create(
+                    item=item,
+                    year=year,
+                    base_cost=None,
+                    labor_cost=None,
+                    material_cost=None,
+                    overhead_cost=None
+                )
+
+            return redirect('project_read', id=project.id)
     else:
         form = ItemForm()
 
     return render(request, 'core/item/item_create.html', {'form': form, 'project': project})
+
+
+def item_read_or_update(request, project_id, item_id):
+    item = get_object_or_404(Item, id=item_id, project_id=project_id)
+
+    volumes = Volume.objects.filter(item=item)
+    pricings = Pricing.objects.filter(item=item)
+    costs = Cost.objects.filter(item=item)
+
+    context = {
+    'item': item,
+    'volumes': list(volumes.values()) if volumes else [],
+    'pricings': list(pricings.values()) if pricings else [],
+    'costs': list(costs.values()) if costs else [],
+    }
+
+    return render(request, 'core/item/item_read_or_update.html', context)
+
+def get_volume_data(request, item_id):
+    volumes = list(Volume.objects.filter(item__id=item_id).values())
+    return JsonResponse({"volumes": volumes})
+
+def get_pricing_data(request, item_id):
+    pricing = list(Pricing.objects.filter(item__id=item_id).values())
+    return JsonResponse({"pricing": pricing})
+
+def get_cost_data(request, item_id):
+    costs = list(Cost.objects.filter(item__id=item_id).values())
+    return JsonResponse({"costs": costs})
+
+@csrf_exempt
+def save_volume_data(request, item_id):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        for volume in data.get("volumes", []):
+            Volume.objects.filter(id=volume["id"]).update(
+                year=volume["year"],
+                min_volume=volume["min_volume"],
+                expected_volume=volume["expected_volume"],
+                max_volume=volume["max_volume"],
+            )
+        return JsonResponse({"status": "success"})
+
+@csrf_exempt
+def save_pricing_data(request, item_id):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        for price in data.get("pricing", []):
+            Pricing.objects.filter(id=price["id"]).update(
+                year=price["year"],
+                base_price=price["base_price"],
+                packaging_price=price["packaging_price"],
+                transport_price=price["transport_price"],
+                warehouse_price=price["warehouse_price"],
+            )
+        return JsonResponse({"status": "success"})
+
+@csrf_exempt
+def save_cost_data(request, item_id):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        for cost in data.get("costs", []):
+            Cost.objects.filter(id=cost["id"]).update(
+                year=cost["year"],
+                base_cost=cost["base_cost"],
+                labor_cost=cost["labor_cost"],
+                material_cost=cost["material_cost"],
+                overhead_cost=cost["overhead_cost"],
+            )
+        return JsonResponse({"status": "success"})
+
+
+@csrf_exempt
+def update_item_data(request, item_id):
+    """ Actualizează Volume, Pricing și Costing pentru un item """
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            item = Item.objects.get(id=item_id)
+            product = item.product
+
+            # Actualizăm Volume
+            for volume_data in data["volumes"]:
+                Volume.objects.update_or_create(id=volume_data.get("id"), defaults=volume_data)
+
+            # Actualizăm Pricing
+            for pricing_data in data["pricing"]:
+                Pricing.objects.update_or_create(id=pricing_data.get("id"), defaults=pricing_data)
+
+            # Actualizăm Cost
+            for cost_data in data["costs"]:
+                Cost.objects.update_or_create(id=cost_data.get("id"), defaults=cost_data)
+
+            return JsonResponse({"success": True})
+
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=400)
+
+    return JsonResponse({"success": False, "error": "Invalid request"}, status=400)
+
+
+
+def get_item_data(request, item_id):
+    """ Returnează datele de Volume, Pricing și Costing pentru un item """
+    try:
+        item = Item.objects.get(id=item_id)
+        product = item.product
+
+        # Preluăm datele pentru Volume, Pricing și Costing
+        volumes = list(Volume.objects.filter(product=product).values("id", "year", "min_volume", "expected_volume", "max_volume"))
+        pricing = list(Pricing.objects.filter(product=product).values("id", "year", "base_price", "packaging_price", "transport_price", "warehouse_price"))
+        costs = list(Cost.objects.filter(product=product).values("id", "year", "base_cost", "labor_cost", "material_cost", "overhead_cost"))
+
+        return JsonResponse({
+            "success": True,
+            "volumes": volumes,
+            "pricing": pricing,
+            "costs": costs
+        })
+
+    except Item.DoesNotExist:
+        return JsonResponse({"success": False, "error": "Item not found"}, status=404)
+    
+
+def save_item_data(request):
+    data = json.loads(request.body)
+    for item in data.get("volumes", []):
+        Volume.objects.filter(id=item["id"]).update(
+            min_volume=item["min_volume"],
+            expected_volume=item["expected_volume"],
+            max_volume=item["max_volume"]
+        )
+    return JsonResponse({"message": "Saved successfully!"})
 
     

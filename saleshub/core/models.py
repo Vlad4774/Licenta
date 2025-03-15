@@ -59,29 +59,30 @@ class Item(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    schedule_years = models.PositiveIntegerField(default=5)
 
     def __str__(self):
         return f"{self.product.name} for {self.project.name} in {self.location}"
 
 class Volume(models.Model):
-    product = models.ForeignKey(Product, related_name='volumes', on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, related_name='volumes', on_delete=models.CASCADE)
     year = models.IntegerField()  
-    min_volume = models.FloatField()
-    expected_volume = models.FloatField()
-    max_volume = models.FloatField()
+    min_volume = models.FloatField(null=True, blank=True)
+    expected_volume = models.FloatField(null=True, blank=True)
+    max_volume = models.FloatField(null=True, blank=True)
 
 class Pricing(models.Model):
-    product = models.ForeignKey(Product, related_name='pricing', on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, related_name='pricing', on_delete=models.CASCADE)
     year = models.IntegerField() 
-    base_price = models.DecimalField(max_digits=10, decimal_places=2)
-    packaging_price = models.DecimalField(max_digits=10, decimal_places=2)
-    transport_price = models.DecimalField(max_digits=10, decimal_places=2)
-    warehouse_price = models.DecimalField(max_digits=10, decimal_places=2)
+    base_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    packaging_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    transport_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    warehouse_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
 class Cost(models.Model):
-    product = models.ForeignKey(Product, related_name='costs', on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, related_name='costs', on_delete=models.CASCADE)
     year = models.IntegerField() 
-    base_cost = models.DecimalField(max_digits=10, decimal_places=2)
-    labor_cost = models.DecimalField(max_digits=10, decimal_places=2)
-    material_cost = models.DecimalField(max_digits=10, decimal_places=2)
-    overhead_cost = models.DecimalField(max_digits=10, decimal_places=2)
+    base_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    labor_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    material_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    overhead_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)

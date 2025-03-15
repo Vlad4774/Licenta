@@ -1,0 +1,32 @@
+{% extends 'core/structure/base.html' %}
+{% load static %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/ag-grid-community@32.0.0/dist/ag-grid-community.min.js"></script>
+<script src="{% static 'js/item_read_or_update.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/item/item_read_or_update.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-primary text-center">
+        Item: <strong>{{ item.product.name }}</strong> in <strong>{{ item.project.name }}</strong>
+    </h2>
+
+    <div class="text-center">
+        <button id="btnVolume" class="btn btn-info">Volume</button>
+        <button id="btnPricing" class="btn btn-info">Pricing</button>
+        <button id="btnCosting" class="btn btn-info">Costing</button>
+    </div>
+
+    <div id="grid-container" class="grid-container" data-item-id="{{ item.id }}">
+        <div id="volumeGrid" class="grid"></div>
+        <div id="pricingGrid" class="grid" style="display: none;"></div>
+        <div id="costingGrid" class="grid" style="display: none;"></div>
+    </div>
+
+    <div class="text-center mt-4">
+        <button id="saveChanges" class="btn btn-success">Save Changes</button>
+    </div>
+</div>
+{% endblock %}

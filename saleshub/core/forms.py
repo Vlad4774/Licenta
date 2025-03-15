@@ -24,6 +24,13 @@ class ProjectForm(forms.ModelForm):
 
 
 class ItemForm(forms.ModelForm):
+    schedule_years = forms.IntegerField(
+        min_value=1,
+        max_value=10,
+        initial=5,
+        help_text="Select the number of years for the schedule plan."
+    )
+
     class Meta:
         model = Item
-        fields = ['product', 'location']
+        fields = ['product', 'location', 'schedule_years']
