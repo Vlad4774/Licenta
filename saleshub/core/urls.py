@@ -7,7 +7,6 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('product/', views.show_products, name='product'),
     path('product/<int:id>/', views.product_detail, name='product_detail'),
-    path('product/save_changes/', views.save_product_changes, name='product_save_changes'),
     path('product/create', views.create_product, name='create_product'),
     path('project/', views.show_projects, name='project_list'),
     path('project/<int:id>', views.view_project, name='project_read'),
@@ -15,14 +14,11 @@ urlpatterns = [
     path('project/new/', views.create_or_edit_project, name='project_create'),
     path('project/<int:id>/edit/', views.create_or_edit_project, name='project_edit'),
     path('project/<int:project_id>/add-item/', views.add_item_to_project, name='add_item_to_project'),
-    path('item/<int:item_id>/volumes/', views.get_volume_data, name='get_volume_data'),
+    path('item/<int:item_id>/volume/', views.get_volume_data, name='get_volume_data'),
     path('item/<int:item_id>/pricing/', views.get_pricing_data, name='get_pricing_data'),
-    path('item/<int:item_id>/costs/', views.get_cost_data, name='get_cost_data'),
+    path('item/<int:item_id>/costing/', views.get_cost_data, name='get_cost_data'),
     path('project/<int:project_id>/item/<int:item_id>/', views.item_read_or_update, name='item_read_or_update'),
+    path('item/<int:item_id>/save-volume/', views.save_volume_data, name='save_volume_data'),
+    path('item/<int:item_id>/save-pricing/', views.save_pricing_data, name='save_pricing_data'),
+    path('item/<int:item_id>/save-costing/', views.save_costing_data, name='save_cost_data'),
 ]
-
-# path('item/<int:item_id>/save-volumes/', views.save_volume_data, name='save_volume_data'),
-    #path('item/<int:item_id>/save-pricing/', views.save_pricing_data, name='save_pricing_data'),
-    #path('item/<int:item_id>/save-costs/', views.save_cost_data, name='save_cost_data'),\
-    #path('api/item/<int:item_id>/data/', views.get_item_data, name='get_item_data'),
-    #path('api/item/<int:item_id>/update/', views.update_item_data, name='update_item_data'),

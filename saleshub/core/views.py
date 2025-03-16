@@ -61,39 +61,6 @@ def product_detail(request, id):
     })
 
 
-@csrf_exempt
-def save_product_changes(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            updated_data = data.get('updated_data', [])
-
-            with transaction.atomic():
-                for item in updated_data:
-                    try:
-                        volume_data = Volume.objects.get(id=item['id'])
-                        volume_data.year = item['year']
-                        volume_data.min_volume = item['min_volume']
-                        volume_data.expected_volume = item['expected_volume']
-                        volume_data.max_volume = item['max_volume']
-                        volume_data.save()
-                        print(f"Updating volume with ID {item['id']}")
-                        print(f"New values: {item['year']}, {item['min_volume']}, {item['expected_volume']}, {item['max_volume']}")
-
-
-                    except Volume.DoesNotExist:
-                        # Log the ID of the missing volume for debugging purposes
-                        print(f"Volume with ID {item['id']} not found")
-
-            return JsonResponse({'success': True})
-
-        except Exception as e:
-            # Log the full exception for debugging purposes
-            print(f"Error: {str(e)}")
-            return JsonResponse({'success': False, 'error': str(e)})
-
-    return JsonResponse({'success': False, 'error': 'Invalid request method'})
-
 @login_required
 def create_product(request):
     if request.method == "POST":
@@ -198,43 +165,63 @@ def add_item_to_project(request, project_id):
 def item_read_or_update(request, project_id, item_id):
     item = get_object_or_404(Item, id=item_id, project_id=project_id)
 
-    volumes = Volume.objects.filter(item=item)
+    volume = Volume.objects.filter(item=item)
     pricings = Pricing.objects.filter(item=item)
-    costs = Cost.objects.filter(item=item)
+    costing = Cost.objects.filter(item=item)
 
     context = {
     'item': item,
-    'volumes': list(volumes.values()) if volumes else [],
+    'volume': list(volume.values()) if volume else [],
     'pricings': list(pricings.values()) if pricings else [],
-    'costs': list(costs.values()) if costs else [],
+    'costing': list(costing.values()) if costing else [],
     }
 
     return render(request, 'core/item/item_read_or_update.html', context)
 
 def get_volume_data(request, item_id):
-    volumes = list(Volume.objects.filter(item__id=item_id).values())
-    return JsonResponse({"volumes": volumes})
+    volume = list(Volume.objects.filter(item__id=item_id).values())
+    return JsonResponse({"volume": volume})
 
 def get_pricing_data(request, item_id):
     pricing = list(Pricing.objects.filter(item__id=item_id).values())
     return JsonResponse({"pricing": pricing})
 
 def get_cost_data(request, item_id):
-    costs = list(Cost.objects.filter(item__id=item_id).values())
-    return JsonResponse({"costs": costs})
+    costing = list(Cost.objects.filter(item__id=item_id).values())
+    return JsonResponse({"costing": costing})
 
 @csrf_exempt
 def save_volume_data(request, item_id):
     if request.method == "POST":
-        data = json.loads(request.body)
-        for volume in data.get("volumes", []):
-            Volume.objects.filter(id=volume["id"]).update(
-                year=volume["year"],
-                min_volume=volume["min_volume"],
-                expected_volume=volume["expected_volume"],
-                max_volume=volume["max_volume"],
-            )
-        return JsonResponse({"status": "success"})
+        try:
+            item = Item.objects.get(id=item_id)
+            data = json.loads(request.body)
+            volume = data.get("volume", [])
+
+            for volume_data in volume:
+                volume_id = volume_data.get("id")
+                year = volume_data.get("year")
+                min_volume = volume_data.get("min_volume")
+                expected_volume = volume_data.get("expected_volume")
+                max_volume = volume_data.get("max_volume")
+
+                Volume.objects.filter(id=volume_id).update(
+                        year=year,
+                        min_volume=min_volume,
+                        expected_volume=expected_volume,
+                        max_volume=max_volume,
+                    )
+
+            return JsonResponse({"status": "success"})
+
+        except Item.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "Item not found."}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({"status": "error", "message": "Invalid JSON."}, status=400)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
+    return JsonResponse({"status": "error", "message": "Invalid request method."}, status=405)
 
 @csrf_exempt
 def save_pricing_data(request, item_id):
@@ -251,10 +238,10 @@ def save_pricing_data(request, item_id):
         return JsonResponse({"status": "success"})
 
 @csrf_exempt
-def save_cost_data(request, item_id):
+def save_costing_data(request, item_id):
     if request.method == "POST":
         data = json.loads(request.body)
-        for cost in data.get("costs", []):
+        for cost in data.get("costING", []):
             Cost.objects.filter(id=cost["id"]).update(
                 year=cost["year"],
                 base_cost=cost["base_cost"],
@@ -264,67 +251,5 @@ def save_cost_data(request, item_id):
             )
         return JsonResponse({"status": "success"})
 
-
-@csrf_exempt
-def update_item_data(request, item_id):
-    """ Actualizează Volume, Pricing și Costing pentru un item """
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            item = Item.objects.get(id=item_id)
-            product = item.product
-
-            # Actualizăm Volume
-            for volume_data in data["volumes"]:
-                Volume.objects.update_or_create(id=volume_data.get("id"), defaults=volume_data)
-
-            # Actualizăm Pricing
-            for pricing_data in data["pricing"]:
-                Pricing.objects.update_or_create(id=pricing_data.get("id"), defaults=pricing_data)
-
-            # Actualizăm Cost
-            for cost_data in data["costs"]:
-                Cost.objects.update_or_create(id=cost_data.get("id"), defaults=cost_data)
-
-            return JsonResponse({"success": True})
-
-        except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)}, status=400)
-
-    return JsonResponse({"success": False, "error": "Invalid request"}, status=400)
-
-
-
-def get_item_data(request, item_id):
-    """ Returnează datele de Volume, Pricing și Costing pentru un item """
-    try:
-        item = Item.objects.get(id=item_id)
-        product = item.product
-
-        # Preluăm datele pentru Volume, Pricing și Costing
-        volumes = list(Volume.objects.filter(product=product).values("id", "year", "min_volume", "expected_volume", "max_volume"))
-        pricing = list(Pricing.objects.filter(product=product).values("id", "year", "base_price", "packaging_price", "transport_price", "warehouse_price"))
-        costs = list(Cost.objects.filter(product=product).values("id", "year", "base_cost", "labor_cost", "material_cost", "overhead_cost"))
-
-        return JsonResponse({
-            "success": True,
-            "volumes": volumes,
-            "pricing": pricing,
-            "costs": costs
-        })
-
-    except Item.DoesNotExist:
-        return JsonResponse({"success": False, "error": "Item not found"}, status=404)
-    
-
-def save_item_data(request):
-    data = json.loads(request.body)
-    for item in data.get("volumes", []):
-        Volume.objects.filter(id=item["id"]).update(
-            min_volume=item["min_volume"],
-            expected_volume=item["expected_volume"],
-            max_volume=item["max_volume"]
-        )
-    return JsonResponse({"message": "Saved successfully!"})
 
     

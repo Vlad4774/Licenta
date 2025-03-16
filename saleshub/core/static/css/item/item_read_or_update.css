@@ -91,6 +91,11 @@ h2 {
 .ag-cell {
     font-size: 14px;
     border-bottom: 1px solid #444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid #ffffff;
 }
 
 /* Evidențierea celulelor selectate */

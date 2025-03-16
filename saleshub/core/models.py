@@ -65,7 +65,7 @@ class Item(models.Model):
         return f"{self.product.name} for {self.project.name} in {self.location}"
 
 class Volume(models.Model):
-    item = models.ForeignKey(Item, related_name='volumes', on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, related_name='volume', on_delete=models.CASCADE)
     year = models.IntegerField()  
     min_volume = models.FloatField(null=True, blank=True)
     expected_volume = models.FloatField(null=True, blank=True)
@@ -80,7 +80,7 @@ class Pricing(models.Model):
     warehouse_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
 class Cost(models.Model):
-    item = models.ForeignKey(Item, related_name='costs', on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, related_name='costing', on_delete=models.CASCADE)
     year = models.IntegerField() 
     base_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     labor_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
