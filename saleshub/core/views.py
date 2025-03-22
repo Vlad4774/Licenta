@@ -1,13 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as auth_login, authenticate, logout
 from django.contrib.auth.decorators import login_required 
-from .models import Product, Pricing, Volume, Cost, Project, Item
+from .models import Product, Pricing, Volume, Cost, Project, Item, Category, Customer, Location, UserRequest
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.core.exceptions import ObjectDoesNotExist
-from .forms import ProductForm, ProjectForm, ItemForm
+from .forms import ProductForm, ProjectForm, ItemForm, CategoryRequestForm, LocationRequestForm, CustomerRequestForm
 import logging
+from django.contrib.admin.views.decorators import staff_member_required
+from django import forms
 
 logger = logging.getLogger(__name__)
 
@@ -340,3 +342,88 @@ def save_costing_data(request, item_id):
         return JsonResponse({"status": "success", "updated_count": updated_count})
     else:
         return JsonResponse({"status": "error", "message": "Invalid request method."}, status=405)
+    
+#----------------------------------------------------------REQUEST--------------------------------------------------------------------------------------------------
+
+@login_required
+def send_request_view(request):
+    if request.method == "POST":
+        req_type = request.POST.get("request_type")
+        form = None
+
+        if req_type == "category":
+            form = CategoryRequestForm(request.POST)
+        elif req_type == "customer":
+            form = CustomerRequestForm(request.POST)
+        elif req_type == "location":
+            form = LocationRequestForm(request.POST)
+
+        if form and form.is_valid():
+            UserRequest.objects.create(
+                request_type=req_type,
+                data=form.cleaned_data,  # ✅ aici e cheia
+                created_by=request.user,
+            )
+            return redirect('send_request')
+
+    return render(request, 'core/request/request_create.html', {
+        'category_form': CategoryRequestForm(),
+        'customer_form': CustomerRequestForm(),
+        'location_form': LocationRequestForm(),
+    })
+
+
+@staff_member_required
+def manage_requests_view(request):
+    requests = UserRequest.objects.filter(is_approved=False).order_by('-created_at')
+
+    categories = Category.objects.all()
+    customers = Customer.objects.all()
+    locations = Location.objects.all()
+
+    if request.method == "POST":
+        # Aprobare
+        if "approve" in request.POST:
+            req = get_object_or_404(UserRequest, id=request.POST.get("req_id"))
+            data = req.data
+
+            if req.request_type == 'category':
+                Category.objects.create(name=data['name'])
+            elif req.request_type == 'customer':
+                Customer.objects.create(name=data['name'], email=data['email'])
+            elif req.request_type == 'location':
+                Location.objects.create(address=data['address'], city=data['city'], country=data['country'])
+
+            req.is_approved = True
+            req.save()
+
+        # Respinge cererea (ștergere)
+        elif "reject" in request.POST:
+            req = get_object_or_404(UserRequest, id=request.POST.get("req_id"))
+            req.delete()
+
+        # Ștergere entități existente
+        elif "delete_category_id" in request.POST:
+            Category.objects.filter(id=request.POST.get("delete_category_id")).delete()
+        elif "delete_customer_id" in request.POST:
+            Customer.objects.filter(id=request.POST.get("delete_customer_id")).delete()
+        elif "delete_location_id" in request.POST:
+            Location.objects.filter(id=request.POST.get("delete_location_id")).delete()
+
+        return redirect('manage_requests')
+
+    return render(request, 'core/request/request_admin.html', {
+        'requests': requests,
+        'categories': categories,
+        'customers': customers,
+        'locations': locations
+    })
+
+
+
+
+
+
+
+
+

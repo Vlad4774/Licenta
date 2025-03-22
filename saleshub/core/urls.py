@@ -29,5 +29,9 @@ urlpatterns = [
     path('item/<int:item_id>/costing/', views.get_cost_data, name='get_cost_data'),
     path('item/<int:item_id>/save-volume/', views.save_volume_data, name='save_volume_data'),
     path('item/<int:item_id>/save-pricing/', views.save_pricing_data, name='save_pricing_data'),
-    path('item/<int:item_id>/save-costing/', views.save_costing_data, name='save_cost_data'),
+    path('item/<int:item_id>/save-costing/', views.save_costing_data, name='save_costing_data'),
+
+    #request (category, location,  customer)
+    path('request/', views.send_request_view, name='send_request'),
+    path('pending-request/', views.manage_requests_view, name='manage_requests'),
 ]

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, Category, Customer, Location, Project, Item
+from .models import Product, Category, Customer, Location, Project, Item, UserRequest
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -8,7 +8,6 @@ class ProductForm(forms.ModelForm):
 
     short_description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}))
     description = forms.CharField(widget=forms.Textarea(attrs={'rows': 5}))
-
 
 class ProjectForm(forms.ModelForm):
     class Meta:
@@ -22,7 +21,6 @@ class ProjectForm(forms.ModelForm):
             'products': forms.SelectMultiple(attrs={'size': 5}),
         }
 
-
 class ItemForm(forms.ModelForm):
     schedule_years = forms.IntegerField(
         min_value=1,
@@ -34,3 +32,20 @@ class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
         fields = ['product', 'location', 'schedule_years']
+
+class CategoryRequestForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name']
+
+
+class CustomerRequestForm(forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = ['name', 'email', 'address']
+
+
+class LocationRequestForm(forms.ModelForm):
+    class Meta:
+        model = Location
+        fields = ['address', 'city', 'country']

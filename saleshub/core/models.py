@@ -1,27 +1,30 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from django.db import models
-
 class Category(models.Model):
+
     name = models.CharField(max_length=255)
     
     def __str__(self):
         return self.name
 
 class Customer(models.Model):
+
     name = models.CharField(max_length=255)
     email = models.EmailField()
+    address = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
 
 class Location(models.Model):
+
+    address = models.CharField(max_length = 255)
     city = models.CharField(max_length=255)
     country = models.CharField(max_length=255)
 
     def __str__(self):
-        return f"{self.city}, {self.country}"
+        return f"{self.address}, {self.city}, {self.country}"
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
@@ -85,3 +88,19 @@ class Cost(models.Model):
     labor_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     material_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     overhead_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+class UserRequest(models.Model):
+    REQUEST_TYPE_CHOICES = [
+        ('category', 'Category'),
+        ('customer', 'Customer'),
+        ('location', 'Location'),
+    ]
+
+    request_type = models.CharField(max_length=20, choices=REQUEST_TYPE_CHOICES)
+    data = models.JSONField()  # aici salvăm toate datele completate în formular
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_approved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.request_type.title()} Request by {self.created_by} ({'Approved' if self.is_approved else 'Pending'})"

@@ -1,0 +1,58 @@
+{% extends 'core/structure/base.html' %}
+{% load static%}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/request/request_create.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<h2>Submit a Request</h2>
+
+<label for="request_type">What do you want to request?</label>
+<select id="request_type">
+    <option value="">Select type...</option>
+    <option value="category">Category</option>
+    <option value="customer">Customer</option>
+    <option value="location">Location</option>
+</select>
+
+<div id="form-container">
+    <form method="POST" id="category-form" class="dynamic-form" style="display:none;">
+        {% csrf_token %}
+        <input type="hidden" name="request_type" value="category">
+        {{ category_form.as_p }}
+        <button type="submit" class="btn btn-success">Submit Request</button>
+    </form>
+
+    <form method="POST" id="customer-form" class="dynamic-form" style="display:none;">
+        {% csrf_token %}
+        <input type="hidden" name="request_type" value="customer">
+        {{ customer_form.as_p }}
+        <button type="submit" class="btn btn-success">Submit Request</button>
+    </form>
+
+    <form method="POST" id="location-form" class="dynamic-form" style="display:none;">
+        {% csrf_token %}
+        <input type="hidden" name="request_type" value="location">
+        {{ location_form.as_p }}
+        <button type="submit" class="btn btn-success">Submit Request</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById("request_type").addEventListener("change", function () {
+        const type = this.value;
+        document.querySelectorAll(".dynamic-form").forEach(form => form.style.display = "none");
+    
+        if (type === "category") {
+            document.getElementById("category-form").style.display = "block";
+        } else if (type === "customer") {
+            document.getElementById("customer-form").style.display = "block";
+        } else if (type === "location") {
+            document.getElementById("location-form").style.display = "block";
+        }
+    });
+</script>
+
+{% endblock %}
