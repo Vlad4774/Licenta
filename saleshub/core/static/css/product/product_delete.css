@@ -1,0 +1,53 @@
+.delete-container {
+    background-color: #1f1f1f;
+    color: white;
+    padding: 30px;
+    max-width: 600px;
+    margin: 60px auto;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+.delete-container h2 {
+    color: #ff4d4d;
+    margin-bottom: 20px;
+}
+
+.delete-container p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #a71d2a;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    text-decoration: none;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+}

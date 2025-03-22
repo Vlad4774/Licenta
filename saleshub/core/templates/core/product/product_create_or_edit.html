@@ -1,0 +1,41 @@
+{% extends 'core/structure/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/product/product_create_or_edit.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<h2>{% if object %}Edit Product{% else %}Create Product{% endif %}</h2>
+
+<div class="create-product-container">
+
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="id_name">Product Name:</label>
+            {{ form.name }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_short_description">Short Description:</label>
+            {{ form.short_description }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_description">Description:</label>
+            {{ form.description }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_category">Category:</label>
+            {{ form.category }}
+        </div>
+
+        <button type="submit" class="btn btn-success">{% if object %}Update{% else %}Save{% endif %}</button>
+        <a href="{% url 'product_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

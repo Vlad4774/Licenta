@@ -4,7 +4,7 @@ from .models import Product, Category, Customer, Location, Project, Item
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'short_description', 'description', 'category', 'sold_to', 'location']
+        fields = ['name', 'short_description', 'description', 'category']
 
     short_description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}))
     description = forms.CharField(widget=forms.Textarea(attrs={'rows': 5}))

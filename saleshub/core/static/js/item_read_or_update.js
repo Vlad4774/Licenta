@@ -1,6 +1,10 @@
-let activeGrid = "volume"
+let activeGrid = "volume";
 let gridOptions;
-let gridApi;
+let gridApis = {
+    volume: null,
+    pricing: null,
+    costing: null
+};
 
 document.addEventListener("DOMContentLoaded", function () {
     const itemId = document.getElementById("grid-container").dataset.itemId;
@@ -22,11 +26,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     document.getElementById("saveChanges").addEventListener("click", function () {
+        console.log("daddas");
         saveChanges(itemId);
     });
 });
 
-// Funcție pentru a schimba între grid-uri
 function showGrid(gridId) {
     document.getElementById("volumeGrid").style.display = "none";
     document.getElementById("pricingGrid").style.display = "none";
@@ -38,34 +42,32 @@ function showGrid(gridId) {
     if (gridId === "costingGrid") activeGrid = "costing";
 }
 
-// Funcție pentru a încărca datele din API
 async function fetchData(url) {
     let response = await fetch(url);
     let data = await response.json();
     return data;
 }
 
-// Funcție pentru a initializa AG Grid
 async function loadGridData(itemId, type) {
-
     let url = `/item/${itemId}/${type}/`;
     let data = await fetchData(url);
-     
+
     let columnDefs = getColumnDefs(type);
+
     gridOptions = {
         columnDefs: columnDefs,
         rowData: data[type] || [],
         defaultColDef: { flex: 1, editable: true },
         rowHeight: 68.5,
-        onGridReady: (params) => {
-            gridApi = params.api; // stocam api in variabila globala
-        }   
+        onGridReady: function (params) {
+            gridApis[type] = params.api;  // Salvăm API-ul pentru gridul curent
+            console.log(`Grid API set for ${type}`);
+        }
     };
 
     new agGrid.createGrid(document.getElementById(`${type}Grid`), gridOptions);
 }
 
-// Funcție pentru a returna coloanele corecte în funcție de tipul grid-ului
 function getColumnDefs(type) {
     if (type === "volume") {
         return [
@@ -94,13 +96,22 @@ function getColumnDefs(type) {
 }
 
 async function saveChanges(itemId) {
-    let url, dataKey;
+    const api = gridApis[activeGrid];
+
+    if (!api) {
+        console.error("Grid API not initialized for:", activeGrid);
+        return;
+    }
+
+    api.stopEditing(); // Asigură-te că valorile editate sunt salvate
+    api.refreshCells(); // Opțional, dacă vrei să reîmprospătezi vizual
 
     let rowData = [];
+    api.forEachNode(function (node) { // Utilizăm API-ul corect pentru a itera prin noduri
+        rowData.push(node.data);
+    });
 
-    gridApi.forEachNode(node => rowData.push(node.data));
-
-
+    let url, dataKey;
     if (activeGrid === "volume") {
         url = `/item/${itemId}/save-volume/`;
         dataKey = "volume";
@@ -112,17 +123,24 @@ async function saveChanges(itemId) {
         dataKey = "costing";
     }
 
-    if (!gridOptions) {
-        console.error(`Error: No grid options found for ${activeGrid}!`);
-        return;
+    console.log("Sending data:", JSON.stringify({ [dataKey]: rowData }));
+
+    try {
+        let response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ [dataKey]: rowData })
+        });
+
+        let result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(`Server Error: ${result.message || response.status}`);
+        }
+
+        alert(`${activeGrid} changes saved!`);
+    } catch (error) {
+        console.error("Error saving data:", error);
+        alert("Failed to save data. Check console.");
     }
-
-    await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ [dataKey]: rowData })
-    });
-
-    alert(`${activeGrid} changes saved!`);
 }
-

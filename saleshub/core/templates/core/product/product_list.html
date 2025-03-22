@@ -1,0 +1,43 @@
+{% extends 'core/structure/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/product/product_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<h2>Product List</h2>
+<a href="{% url 'product_create' %}" class="create">Create New Product</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Short Description</th>
+            <th>Category</th>
+            <th>Sold To</th>
+            <th>Location</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.name }}</td>
+            <td>{{ product.short_description }}</td>
+            <td>{{ product.category.name }}</td>
+            <td>{{ product.sold_to.name }}</td>
+            <td>{{ product.location }}</td>
+            <td>
+                <a href="{% url 'product_edit' product.id %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'product_delete' product.id %}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">No products available.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

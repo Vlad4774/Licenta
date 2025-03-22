@@ -55,14 +55,6 @@ h2 {
     margin-right: 5px;
 }
 
-.btn-view {
-    background-color: #5bc0de;
-}
-
-.btn-view:hover {
-    background-color: #31b0d5;
-}
-
 .btn-warning {
     background-color: #f0ad4e;
 }
@@ -77,20 +69,4 @@ h2 {
 
 .btn-danger:hover {
     background-color: #c9302c;
-}
-
-/* Responsive table on small screens */
-@media screen and (max-width: 768px) {
-    .table {
-        font-size: 14px;
-    }
-
-    .table th, .table td {
-        padding: 10px;
-    }
-
-    .btn {
-        font-size: 12px;
-        padding: 5px 8px;
-    }
 }

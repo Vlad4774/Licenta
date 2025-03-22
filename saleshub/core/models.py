@@ -28,8 +28,6 @@ class Product(models.Model):
     short_description = models.CharField(max_length=500)
     description = models.TextField() 
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
-    sold_to = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
-    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True)
     
     def __str__(self):
         return self.name
@@ -59,6 +57,7 @@ class Item(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    sold_to = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
     schedule_years = models.PositiveIntegerField(default=5)
 
     def __str__(self):

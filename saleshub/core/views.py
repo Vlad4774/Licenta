@@ -5,8 +5,13 @@ from .models import Product, Pricing, Volume, Cost, Project, Item
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from django.db import transaction
+from django.core.exceptions import ObjectDoesNotExist
 from .forms import ProductForm, ProjectForm, ItemForm
+import logging
+
+logger = logging.getLogger(__name__)
+
+#-------------------------------------------------------------------------STRUCTURE--------------------------------------------------------------------------------
 
 @login_required
 def home(request):
@@ -30,11 +35,12 @@ def user_login(request):
             return render(request, 'core/structure/login.html', {'error': 'Invalid credentials'})
     return render(request, 'core/structure/login.html')
 
+#-------------------------------------------------------------------PRODUCTS----------------------------------------------------------------------------------------
+
 @login_required
 def show_products(request):
     products = Product.objects.all()
-    return render(request, 'core/product/product_list.html', {'projects': products})
-
+    return render(request, 'core/product/product_list.html', {'products': products})
 
 @login_required
 def product_detail(request, id):
@@ -60,18 +66,35 @@ def product_detail(request, id):
         'costs_data': costs_data,
     })
 
-
 @login_required
-def create_product(request):
+def create_or_edit_product(request, id=None):
+
+    if id:
+        product = get_object_or_404(Product, id=id)
+    else:
+        product = None
+
     if request.method == "POST":
-        form = ProductForm(request.POST)
+        form = ProductForm(request.POST, instance = product)
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('product_list')
     else:
         form = ProductForm()
 
-    return render(request, 'core/product/product_create.html', {'form': form})
+    return render(request, 'core/product/product_create_or_edit.html', {'form': form})
+
+@login_required
+def delete_product(request, id):
+    product = get_object_or_404(Product, id=id)
+
+    if request.method == "POST":
+        product.delete()
+        return redirect('product_list')
+
+    return render(request, 'core/product/product_delete.html', {'product': product})
+
+#----------------------------------------------------------------------------PROJECTS-----------------------------------------------------------------------------
 
 @login_required
 def show_projects(request):
@@ -161,6 +184,7 @@ def add_item_to_project(request, project_id):
 
     return render(request, 'core/item/item_create.html', {'form': form, 'project': project})
 
+#------------------------------------------------------------ITEM---------------------------------------------------------------------------------------------------
 
 def item_read_or_update(request, project_id, item_id):
     item = get_object_or_404(Item, id=item_id, project_id=project_id)
@@ -190,66 +214,129 @@ def get_cost_data(request, item_id):
     costing = list(Cost.objects.filter(item__id=item_id).values())
     return JsonResponse({"costing": costing})
 
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import Item, Volume
+from django.core.exceptions import ObjectDoesNotExist
+import logging
+
+logger = logging.getLogger(__name__)
+
 @csrf_exempt
 def save_volume_data(request, item_id):
-    if request.method == "POST":
+    if request.method != "POST":
+        return JsonResponse({"status": "error", "message": "Invalid request method."}, status=405)
+
+    try:
+        raw_body = request.body.decode('utf-8')
+        logger.info(f"Raw request body: {raw_body}")
+        print("Received raw body:", raw_body)
+        data = json.loads(raw_body)
+    except json.JSONDecodeError:
+        return JsonResponse({"status": "error", "message": "Invalid JSON format."}, status=400)
+
+    try:
+        item = Item.objects.get(id=item_id)
+    except ObjectDoesNotExist:
+        return JsonResponse({"status": "error", "message": "Item not found."}, status=404)
+
+    if "volume" not in data or not isinstance(data["volume"], list):
+        return JsonResponse({"status": "error", "message": "Invalid data format."}, status=400)
+
+    volumes = data["volume"]
+    saved_volumes = []
+
+    for volume_data in volumes:
+        volume_id = volume_data.get("id")
+        year = volume_data.get("year")
+        min_volume = volume_data.get("min_volume")
+        expected_volume = volume_data.get("expected_volume")
+        max_volume = volume_data.get("max_volume")
+
         try:
-            item = Item.objects.get(id=item_id)
-            data = json.loads(request.body)
-            volume = data.get("volume", [])
+            year = int(year)
+            min_volume = int(min_volume) if min_volume is not None else None
+            expected_volume = int(expected_volume) if expected_volume is not None else None
+            max_volume = int(max_volume) if max_volume is not None else None
+        except ValueError:
+            return JsonResponse({"status": "error", "message": f"Invalid number format for year {year}."}, status=400)
 
-            for volume_data in volume:
-                volume_id = volume_data.get("id")
-                year = volume_data.get("year")
-                min_volume = volume_data.get("min_volume")
-                expected_volume = volume_data.get("expected_volume")
-                max_volume = volume_data.get("max_volume")
+        if volume_id:
+            try:
+                volume = Volume.objects.get(id=volume_id)
+                volume.year = year
+                volume.min_volume = min_volume
+                volume.expected_volume = expected_volume
+                volume.max_volume = max_volume
+                volume.save()
+            except Volume.DoesNotExist:
+                return JsonResponse({"status": "error", "message": f"Volume ID {volume_id} not found."}, status=404)
+        else:
+            volume = Volume.objects.create(
+                item=item,
+                year=year,
+                min_volume=min_volume,
+                expected_volume=expected_volume,
+                max_volume=max_volume
+            )
 
-                Volume.objects.filter(id=volume_id).update(
-                        year=year,
-                        min_volume=min_volume,
-                        expected_volume=expected_volume,
-                        max_volume=max_volume,
-                    )
+        saved_volumes.append({
+            "id": volume.id,
+            "year": volume.year,
+            "min_volume": volume.min_volume,
+            "expected_volume": volume.expected_volume,
+            "max_volume": volume.max_volume
+        })
 
-            return JsonResponse({"status": "success"})
-
-        except Item.DoesNotExist:
-            return JsonResponse({"status": "error", "message": "Item not found."}, status=404)
-        except json.JSONDecodeError:
-            return JsonResponse({"status": "error", "message": "Invalid JSON."}, status=400)
-        except Exception as e:
-            return JsonResponse({"status": "error", "message": str(e)}, status=500)
-
-    return JsonResponse({"status": "error", "message": "Invalid request method."}, status=405)
+    return JsonResponse({"status": "success", "volumes": saved_volumes}, status=200)
 
 @csrf_exempt
 def save_pricing_data(request, item_id):
     if request.method == "POST":
-        data = json.loads(request.body)
-        for price in data.get("pricing", []):
-            Pricing.objects.filter(id=price["id"]).update(
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"status": "error", "message": "Invalid JSON format."}, status=400)
+
+        pricing_data = data.get("pricing", [])
+        updated_count = 0
+
+        for price in pricing_data:
+            updated = Pricing.objects.filter(id=price["id"]).update(
                 year=price["year"],
                 base_price=price["base_price"],
                 packaging_price=price["packaging_price"],
                 transport_price=price["transport_price"],
                 warehouse_price=price["warehouse_price"],
             )
-        return JsonResponse({"status": "success"})
+            updated_count += updated
+
+        return JsonResponse({"status": "success", "updated_count": updated_count})
+    else:
+        return JsonResponse({"status": "error", "message": "Invalid request method."}, status=405)
 
 @csrf_exempt
 def save_costing_data(request, item_id):
     if request.method == "POST":
-        data = json.loads(request.body)
-        for cost in data.get("costING", []):
-            Cost.objects.filter(id=cost["id"]).update(
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"status": "error", "message": "Invalid JSON format."}, status=400)
+
+        costing_data = data.get("costing", [])  # Corectat "costING" in "costing"
+        updated_count = 0
+
+        for cost in costing_data:
+            updated = Cost.objects.filter(id=cost["id"]).update(
                 year=cost["year"],
                 base_cost=cost["base_cost"],
                 labor_cost=cost["labor_cost"],
                 material_cost=cost["material_cost"],
                 overhead_cost=cost["overhead_cost"],
             )
-        return JsonResponse({"status": "success"})
+            updated_count += updated
 
-
-    
+        return JsonResponse({"status": "success", "updated_count": updated_count})
+    else:
+        return JsonResponse({"status": "error", "message": "Invalid request method."}, status=405)
