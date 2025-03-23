@@ -1,0 +1,81 @@
+/* Container principal */
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: #1f1f1f;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 188, 212, 0.05);
+    color: white;
+}
+
+/* Titlu formular */
+.container h2 {
+    text-align: center;
+    color: #00bcd4;
+    margin-bottom: 30px;
+}
+
+/* Etichete și inputuri */
+form label {
+    display: block;
+    font-weight: bold;
+    color: #00bcd4;
+    margin-bottom: 5px;
+}
+
+form input,
+form select,
+form textarea {
+    width: 100%;
+    padding: 10px;
+    background-color: #2c2c2c;
+    border: 1px solid #00bcd4;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+    outline: none;
+    border-color: #008c9e;
+    box-shadow: 0 0 5px rgba(0, 188, 212, 0.4);
+}
+
+/* Butoane */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.3s ease;
+    cursor: pointer;
+}
+
+/* Buton submit */
+.btn-primary {
+    background-color: #00bcd4;
+    color: white;
+    border: none;
+    margin-right: 10px;
+}
+
+.btn-primary:hover {
+    background-color: #008c9e;
+}
+
+/* Buton cancel */
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+}

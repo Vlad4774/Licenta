@@ -9,6 +9,10 @@
 
 <h2>Submit a Request</h2>
 
+{% if user.is_authenticated and user.is_staff %}
+    <a href="{% url 'manage_requests' %}" class="btn btn-info" style="margin-left: auto;">Pending Requests</a>
+{% endif %}
+
 <label for="request_type">What do you want to request?</label>
 <select id="request_type">
     <option value="">Select type...</option>

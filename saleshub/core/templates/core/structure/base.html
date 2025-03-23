@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/structure/base.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     {% block head %}{% endblock %}
 </head>
 
@@ -16,14 +17,15 @@
         <div class="saleshub-logo">
             {% if request.user.is_authenticated %}
             <a href="{% url 'home' %}">
-                <h1>SalesHub</h1>
+                <img src="{% static 'images/logo.png' %}" alt="SalesHub Logo" class="saleshub-logo-img">
             </a>
             {% else %}
             <a href="{% url 'get_started' %}">
-                <h1>SalesHub</h1>
+                <img src="{% static 'images/logo.png' %}" alt="SalesHub Logo" class="saleshub-logo-img">
             </a>
             {% endif %}
         </div>
+        
         
         {% if request.path == '/' or request.path == '/login/' %}
         <nav class="saleshub-navigation">

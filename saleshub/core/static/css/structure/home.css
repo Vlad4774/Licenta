@@ -16,7 +16,6 @@
     justify-content: center; /* Center buttons */
     flex-wrap: wrap; /* Allow buttons to wrap */
     gap: 15px; /* Space between buttons */
-    margin: 50px auto; /* Center group in section */
 }
 
 .button {

@@ -1,164 +1,180 @@
-/* ============================== */
-/*        CONTAINER GENERAL       */
-/* ============================== */
-
+/* Container principal */
 .container {
-    max-width: 1100px; /* Fix pentru lățimea conținutului */
-    margin: 50px auto; /* Centrare pe pagină și spațiere */
-    padding: 30px;
-    background-color: #1f1f1f; /* Fundal */
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    margin-left:20px;
+    padding: 20px;
+    color: white;
 }
 
-/* ============================== */
-/*          TITLU PROIECT         */
-/* ============================== */
+/* Card proiect */
+.card {
+    background-color: #1f1f1f;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 0 10px rgba(0, 188, 212, 0.1);
+}
 
-h2.text-primary {
+/* Titlu proiect */
+.card h2 {
     color: #00bcd4;
     font-size: 28px;
-    font-weight: bold;
     margin-bottom: 20px;
 }
 
-/* ============================== */
-/*     INFORMAȚII PROIECT         */
-/* ============================== */
-
-.row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    align-items: flex-start;
+/* Secțiune informații proiect */
+.card .row {
+    margin-bottom: 30px;
 }
 
-/* Casetă informații proiect */
-.col-md-4 {
-    background-color: #2c2c2c;
-    padding: 15px;
-    border-radius: 5px;
-    flex: 1;
-    min-width: 280px;
-}
-
-.col-md-4 p {
+.card p {
     margin: 8px 0;
+    font-size: 16px;
 }
 
-.col-md-4 strong {
+.card strong {
     color: #00bcd4;
-}
-
-/* ============================== */
-/*          TABEL PRODUSE         */
-/* ============================== */
-
-.table-responsive {
-    width: 100%;
-    margin-top: 20px;
 }
 
 .table {
     width: 100%;
+    margin: 0 auto 40px auto;
     border-collapse: collapse;
     background-color: #1f1f1f;
     color: white;
+    box-shadow: 0 0 12px rgba(0,0,0,0.2);
     border-radius: 8px;
     overflow: hidden;
 }
 
-.table th, .table td {
-    padding: 12px;
-    border: 1px solid #00bcd4;
+.table th,
+.table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #333;
     text-align: left;
 }
 
-.table th {
-    background-color: #0097a7;
-    color: white;
-    font-weight: bold;
+.table thead {
+    background-color: #2a2a2a;
 }
 
-/* Alternare culori pe rânduri */
-.table tr:nth-child(even) {
-    background-color: #2c2c2c;
+.table tr:hover {
+    background-color: #2f2f2f;
 }
 
-/* Link produs */
-.table a {
-    color: #00bcd4;
-    text-decoration: none;
-    font-weight: bold;
-}
 
-.table a:hover {
-    text-decoration: underline;
-}
-
-/* ============================== */
-/*         BUTOANE EDITARE        */
-/* ============================== */
-
-.mt-3 {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.mt-3 a {
-    padding: 12px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-    text-decoration: none;
-    display: inline-block;
+/* Mesaj fallback */
+.text-center {
     text-align: center;
-    transition: background-color 0.3s;
+    font-style: italic;
 }
 
-/* Buton edit */
-.mt-3 .edit {
-    background-color: #f0ad4e;
+/* Butoane */
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    text-decoration: none;
+    margin-right: 8px;
+    transition: background 0.3s ease;
+}
+
+.btn-info {
+    background-color: #00bcd4;
     color: white;
 }
 
-.mt-3 .edit:hover {
-    background-color: #ec971f;
+.btn-info:hover {
+    background-color: #008c9e;
 }
 
-/* Buton delete */
-.mt-3 .delete {
-    background-color: #d9534f;
+.btn-danger {
+    background-color: #dc3545;
     color: white;
 }
 
-.mt-3 .delete:hover {
-    background-color: #c9302c;
+.btn-danger:hover {
+    background-color: #a71d2a;
 }
 
-/* ============================== */
-/*        RESPONSIVE FIXES        */
-/* ============================== */
-
-@media screen and (max-width: 768px) {
-    .row {
-        flex-direction: column;
-    }
-
-    .table th, .table td {
-        font-size: 14px;
-        padding: 8px;
-    }
-
-    .mt-3 {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .mt-3 a {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 10px;
-    }
+/* Link Create New Item */
+.edit {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #00bcd4;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.3s ease;
 }
+
+.edit:hover {
+    background-color: #008c9e;
+}
+
+.project-inline-form input,
+.project-inline-form select {
+    background-color: #2c2c2c;
+    color: white;
+    border: 1px solid #00d1ff;
+    padding: 6px 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.project-inline-form input:focus,
+.project-inline-form select:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 209, 255, 0.5);
+}
+
+.project-inline-form .btn-success {
+    background-color: #00c853;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.project-inline-form .btn-success:hover {
+    background-color: #009624;
+}
+
+/* Layout split pe două coloane */
+.project-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+/* Panel stânga */
+.left-panel {
+    flex: 1;
+    background-color: #1f1f1f;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    box-shadow: 0 0 8px rgba(0, 188, 212, 0.1);
+}
+
+/* Panel dreapta */
+.right-panel {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+.btn-danger:hover {
+    background-color: #a71d2a;
+}
+
+
+

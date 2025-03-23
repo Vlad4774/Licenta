@@ -113,3 +113,51 @@ h2 {
     font-size: 16px;
     color: #00d1ff;
 }
+
+.item-layout {
+    display: flex;
+    gap: 30px;
+    padding: 30px;
+}
+
+.left-panel {
+    flex: 1;
+    background-color: #1f1f1f;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    box-shadow: 0 0 8px rgba(0, 188, 212, 0.1);
+}
+
+.left-panel .title {
+    color: #00bcd4;
+    margin-bottom: 10px;
+}
+
+.kpi-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.kpi-list li {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #d1f2f6;
+}
+
+.item-layout {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.left-panel {
+    flex: 0 0 22%;
+    max-width: 22%;
+}
+
+.right-panel {
+    flex: 1;
+}
+
+

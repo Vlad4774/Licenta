@@ -96,7 +96,7 @@ def delete_product(request, id):
 
     return render(request, 'core/product/product_delete.html', {'product': product})
 
-#----------------------------------------------------------------------------PROJECTS-----------------------------------------------------------------------------
+#----------------------------------------------------------------------------PROJECT-----------------------------------------------------------------------------
 
 @login_required
 def show_projects(request):
@@ -126,7 +126,17 @@ def create_or_edit_project(request, id=None):
 @login_required
 def view_project(request, id):
     project = get_object_or_404(Project, id=id)
-    return render(request, 'core/project/project_read.html', {'project': project})
+
+    if request.method == 'POST':
+        project.dos = request.POST.get('dos')
+        project.sop = request.POST.get('sop')
+        project.eop = request.POST.get('eop')
+        project.acquisition_status = request.POST.get('acquisition_status')
+        project.acquisition_probability = request.POST.get('acquisition_probability')
+        project.save()
+        return redirect('project_read', id=id)
+
+    return render(request, 'core/project/project_read.html', {'project': project })
 
 @login_required
 def delete_project(request, id):
@@ -342,6 +352,23 @@ def save_costing_data(request, item_id):
         return JsonResponse({"status": "success", "updated_count": updated_count})
     else:
         return JsonResponse({"status": "error", "message": "Invalid request method."}, status=405)
+    
+from django.shortcuts import get_object_or_404, redirect, render
+from core.models import Item
+
+@login_required
+def item_delete_view(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+
+    if request.method == "POST":
+        project_id = item.project.id
+        item.delete()
+        return redirect('project_read', project_id)
+
+    return render(request, 'core/item/item_delete.html', {
+        'item': item
+    })
+
     
 #----------------------------------------------------------REQUEST--------------------------------------------------------------------------------------------------
 

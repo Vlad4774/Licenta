@@ -1,4 +1,10 @@
 {% extends 'core/structure/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/item/item_create.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <h2>Add Item to {{ project.name }}</h2>

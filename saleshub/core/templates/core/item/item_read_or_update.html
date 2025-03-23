@@ -8,25 +8,51 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 class="text-primary text-center">
-        Item: <strong>{{ item.product.name }}</strong> in <strong>{{ item.project.name }}</strong>
-    </h2>
+<div class="item-layout">
+    <div class="left-panel">
+        <p><strong>Project: </strong> 
+            <a href="{% url 'project_read' item.project.id %}" class="project-link">
+                {{ item.project.name }}
+            </a>
+        </p>
 
-    <div class="text-center">
-        <button id="btnVolume" class="btn btn-info">Volume</button>
-        <button id="btnPricing" class="btn btn-info">Pricing</button>
-        <button id="btnCosting" class="btn btn-info">Costing</button>
+        <hr>
+
+        <p><strong>Product: </strong>{{ item.product.name }}</p>
+        <p><strong>Short Description: </strong> {{ item.product.short_description }}</p>
+        <p><strong>Category: </strong> {{ item.product.category.name }}</p>
+
+        <hr>
+
+        <h3>KPI Calculated</h3>
+        <ul class="kpi-list">
+            <li><strong>Total Sales:</strong> <span id="totalSales">-</span> €</li>
+            <li><strong>Total Cost:</strong> <span id="totalCost">-</span> €</li>
+            <li><strong>Total EBIT:</strong> <span id="totalEbit">-</span> €</li>
+            <li><strong>Avg. Final Price:</strong> <span id="avgPrice">-</span> €</li>
+            <li><strong>Avg. Final Cost:</strong> <span id="avgCost">-</span> €</li>
+        </ul>
     </div>
 
-    <div id="grid-container" class="grid-container" data-item-id="{{ item.id }}">
-        <div id="volumeGrid" class="ag-theme-alpine-dark grid"></div>
-        <div id="pricingGrid" class="ag-theme-alpine-dark grid" style="display: none;"></div>
-        <div id="costingGrid" class="ag-theme-alpine-dark grid" style="display: none;"></div>
-    </div>
+    <div class="right-panel">
+        <div class="container">
 
-    <div class="text-center mt-4">
-        <button id="saveChanges" class="btn btn-success">Save Changes</button>
+            <div class="text-center">
+                <button id="btnVolume" class="btn btn-info">Volume</button>
+                <button id="btnPricing" class="btn btn-info">Pricing</button>
+                <button id="btnCosting" class="btn btn-info">Costing</button>
+            </div>
+
+            <div id="grid-container" class="grid-container" data-item-id="{{ item.id }}">
+                <div id="volumeGrid" class="ag-theme-alpine-dark grid"></div>
+                <div id="pricingGrid" class="ag-theme-alpine-dark grid" style="display: none;"></div>
+                <div id="costingGrid" class="ag-theme-alpine-dark grid" style="display: none;"></div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button id="saveChanges" class="btn btn-success">Save Changes</button>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
