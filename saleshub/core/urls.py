@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     #structure
@@ -35,4 +37,9 @@ urlpatterns = [
     #request (category, location,  customer)
     path('request/', views.send_request_view, name='send_request'),
     path('pending-request/', views.manage_requests_view, name='manage_requests'),
+
+    #dashboard
+    path('dashboard/', views.dashboard_view, name='dashboard'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

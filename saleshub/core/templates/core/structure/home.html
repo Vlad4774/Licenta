@@ -4,6 +4,7 @@
 {% block head %}
 <title>SalesHub</title>
 <link rel="stylesheet" href="{% static 'css/structure/home.css' %}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -13,10 +14,10 @@
             <a href="{% url 'project_list' %}" class="button">Overview Projects</a>
             <a href="{% url 'product_list' %}" class="button">Overview Products</a>
             <a href="{% url 'product_list' %}" class="button">Overview Items</a>
-            <a href="#link" class="button">Dashboards</a>
+            <a href="{% url 'dashboard' %}" class="button">Standard Dashboards</a>
+            <a href="{% url 'dashboard' %}" class="button">Personalize Dashboard</a>
             <a href="#link" class="button">Excel Reports</a>
             <a href="{% url 'send_request' %}" class="button">Requests</a>
-            <a href="{% url 'send_request' %}" class="button">Support</a>
         </div>
     </section>
     
@@ -38,7 +39,33 @@
 
         <div class="info-part center">
             <h3>Main Dashboard</h3>
+            <canvas id="revenueChart"></canvas>
         </div>
+
+        <script>
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: {{ labels|safe }},
+                    datasets: [{
+                        data: {{ values|safe }},
+                        backgroundColor: ['#36A2EB', '#FFCE56', '#FF6384'],
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        title: {
+                            display: true,
+                            text: 'Expected Revenue by Project Status'
+                        }
+                    }
+                }
+            });
+        </script>
+        
 
         <div class="info-part right">
             <h3>News</h3>

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, Category, Customer, Location, Project, Item, UserRequest
+from .models import Product, Category, Customer, Location, Project, Item, Contract
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -49,3 +49,8 @@ class LocationRequestForm(forms.ModelForm):
     class Meta:
         model = Location
         fields = ['address', 'city', 'country']
+
+class ContractUploadForm(forms.ModelForm):
+    class Meta:
+        model = Contract
+        fields = ['file']

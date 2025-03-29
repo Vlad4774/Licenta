@@ -6,10 +6,11 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.core.exceptions import ObjectDoesNotExist
-from .forms import ProductForm, ProjectForm, ItemForm, CategoryRequestForm, LocationRequestForm, CustomerRequestForm
+from .forms import ProductForm, ProjectForm, ItemForm, CategoryRequestForm, LocationRequestForm, CustomerRequestForm, ContractUploadForm
 import logging
 from django.contrib.admin.views.decorators import staff_member_required
-from django import forms
+from decimal import Decimal
+from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +19,34 @@ logger = logging.getLogger(__name__)
 @login_required
 def home(request):
     products = Product.objects.all()
-    return render(request, 'core/structure/home.html', {'products': products})
+
+    status_values = ['approved', 'pending', 'rejected']
+    revenue_by_status = {}
+
+    for status in status_values:
+        projects = Project.objects.filter(acquisition_status=status)
+        total_revenue = 0
+
+        for project in projects:
+            for item in project.items.all():
+                volumes = item.volume.all()
+                pricing = item.pricing.all()
+
+                for v in volumes:
+                    price_obj = pricing.filter(year=v.year).first()
+                    if v.expected_volume and price_obj and price_obj.base_price:
+                        total_revenue += float(v.expected_volume) * float(price_obj.base_price)
+
+        revenue_by_status[status.capitalize()] = round(total_revenue, 2)
+
+    labels = list(revenue_by_status.keys())
+    values = list(revenue_by_status.values())
+
+    return render(request, 'core/structure/home.html', {
+        'products': products,
+        'labels': labels,
+        'values': values
+    })
 
 def get_started(request):
     if request.user.is_authenticated:
@@ -37,7 +65,7 @@ def user_login(request):
             return render(request, 'core/structure/login.html', {'error': 'Invalid credentials'})
     return render(request, 'core/structure/login.html')
 
-#-------------------------------------------------------------------PRODUCTS----------------------------------------------------------------------------------------
+#-------------------------------------------------------------------PRODUCT----------------------------------------------------------------------------------------
 
 @login_required
 def show_products(request):
@@ -127,16 +155,32 @@ def create_or_edit_project(request, id=None):
 def view_project(request, id):
     project = get_object_or_404(Project, id=id)
 
-    if request.method == 'POST':
+    # Upload contract
+    if request.method == "POST" and 'upload_contract' in request.POST:
+        contract_form = ContractUploadForm(request.POST, request.FILES)
+        if contract_form.is_valid():
+            contract = contract_form.save(commit=False)
+            contract.project = project
+            contract.save()
+            return redirect('project_read', id=project.id)
+
+    # Update proiect
+    elif request.method == "POST":
         project.dos = request.POST.get('dos')
         project.sop = request.POST.get('sop')
         project.eop = request.POST.get('eop')
         project.acquisition_status = request.POST.get('acquisition_status')
         project.acquisition_probability = request.POST.get('acquisition_probability')
         project.save()
-        return redirect('project_read', id=id)
+        return redirect('project_read', pk=project.id)
 
-    return render(request, 'core/project/project_read.html', {'project': project })
+    # Form de upload gol pentru template
+    contract_form = ContractUploadForm()
+
+    return render(request, 'core/project/project_read.html', {
+        'project': project,
+        'form': contract_form
+    })
 
 @login_required
 def delete_project(request, id):
@@ -226,15 +270,6 @@ def get_cost_data(request, item_id):
     costing = list(Cost.objects.filter(item__id=item_id).values())
     return JsonResponse({"costing": costing})
 
-import json
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from .models import Item, Volume
-from django.core.exceptions import ObjectDoesNotExist
-import logging
-
-logger = logging.getLogger(__name__)
-
 @csrf_exempt
 def save_volume_data(request, item_id):
     if request.method != "POST":
@@ -242,8 +277,6 @@ def save_volume_data(request, item_id):
 
     try:
         raw_body = request.body.decode('utf-8')
-        logger.info(f"Raw request body: {raw_body}")
-        print("Received raw body:", raw_body)
         data = json.loads(raw_body)
     except json.JSONDecodeError:
         return JsonResponse({"status": "error", "message": "Invalid JSON format."}, status=400)
@@ -336,7 +369,7 @@ def save_costing_data(request, item_id):
         except json.JSONDecodeError:
             return JsonResponse({"status": "error", "message": "Invalid JSON format."}, status=400)
 
-        costing_data = data.get("costing", [])  # Corectat "costING" in "costing"
+        costing_data = data.get("costing", [])
         updated_count = 0
 
         for cost in costing_data:
@@ -409,7 +442,6 @@ def manage_requests_view(request):
     locations = Location.objects.all()
 
     if request.method == "POST":
-        # Aprobare
         if "approve" in request.POST:
             req = get_object_or_404(UserRequest, id=request.POST.get("req_id"))
             data = req.data
@@ -424,12 +456,10 @@ def manage_requests_view(request):
             req.is_approved = True
             req.save()
 
-        # Respinge cererea (ștergere)
         elif "reject" in request.POST:
             req = get_object_or_404(UserRequest, id=request.POST.get("req_id"))
             req.delete()
 
-        # Ștergere entități existente
         elif "delete_category_id" in request.POST:
             Category.objects.filter(id=request.POST.get("delete_category_id")).delete()
         elif "delete_customer_id" in request.POST:
@@ -446,6 +476,223 @@ def manage_requests_view(request):
         'locations': locations
     })
 
+#------------------------------------------------------------------------DASHBOARD-------------------------------------------------------------------------
+
+def dashboard_view(request):
+
+    years = list(range(2025, 2033))
+    cat_labels, cat_values = get_revenue_by_category()
+    loc_labels, loc_values = get_revenue_by_location()
+    cus_labels, cus_values = get_revenue_by_customer()
+    prod_labels, prod_values = get_revenue_by_product()
+    years, revenue_vals, cost_vals, ebit_vals = get_revenue_and_cost_by_year()
+    vol_min, vol_exp, vol_max = get_volume_projection()
+
+    return render(request, 'core/dashboard/dashboards.html', {
+        'category_labels': cat_labels,
+        'category_values': cat_values,
+        'location_labels': loc_labels,
+        'location_values': loc_values,
+        'customer_labels': cus_labels,
+        'customer_values': cus_values,
+        'product_labels': prod_labels,
+        'product_values': prod_values,
+        'years_range': years,
+        'revenue_values': revenue_vals,
+        'cost_values': cost_vals,
+        'ebit_values': ebit_vals,
+        'volume_min': vol_min,
+        'volume_exp': vol_exp,
+        'volume_max': vol_max
+    })
+
+
+def get_revenue_by_category():
+    category_labels = []
+    category_values = []
+
+    for category in Category.objects.all():
+        total_revenue = Decimal(0)
+        products = category.product_set.all()
+
+        items = Item.objects.filter(product__in=products)
+
+        for item in items:
+            volumes = item.volume.all()
+            pricing = item.pricing.all()
+
+            for volume in volumes:
+                price = pricing.filter(year=volume.year).first()
+                if volume.expected_volume and price:
+                    final_price = sum(filter(None, [
+                        price.base_price,
+                        price.packaging_price,
+                        price.transport_price,
+                        price.warehouse_price
+                    ]))
+                    revenue = Decimal(volume.expected_volume) * final_price
+                    total_revenue += revenue
+
+        category_labels.append(category.name)
+        category_values.append(float(total_revenue))
+
+    return category_labels, category_values
+
+def get_revenue_by_location():
+    location_labels = []
+    location_values = []
+
+    for location in Location.objects.all():
+        total_revenue = Decimal(0)
+        items = Item.objects.filter(location=location)
+
+        for item in items:
+            volumes = item.volume.all()
+            pricing = item.pricing.all()
+
+            for volume in volumes:
+                price = pricing.filter(year=volume.year).first()
+                if volume.expected_volume and price:
+                    final_price = sum(filter(None, [
+                        price.base_price,
+                        price.packaging_price,
+                        price.transport_price,
+                        price.warehouse_price
+                    ]))
+                    total_revenue += Decimal(volume.expected_volume) * final_price
+
+        location_labels.append(str(location))
+        location_values.append(float(total_revenue))
+
+    return location_labels, location_values
+
+def get_revenue_by_customer():
+    customer_labels = []
+    customer_values = []
+
+    for customer in Customer.objects.all():
+        total_revenue = Decimal(0)
+        items = Item.objects.filter(project__customer=customer)
+
+        for item in items:
+            volumes = item.volume.all()
+            pricing = item.pricing.all()
+
+            for volume in volumes:
+                price = pricing.filter(year=volume.year).first()
+                if volume.expected_volume and price:
+                    final_price = sum(filter(None, [
+                        price.base_price,
+                        price.packaging_price,
+                        price.transport_price,
+                        price.warehouse_price
+                    ]))
+                    total_revenue += Decimal(volume.expected_volume) * final_price
+
+        customer_labels.append(customer.name)
+        customer_values.append(float(total_revenue))
+
+    return customer_labels, customer_values
+
+def get_revenue_by_product():
+    product_labels = []
+    product_values = []
+
+    for product in Product.objects.all():
+        total_revenue = Decimal(0)
+        items = Item.objects.filter(product=product)
+
+        for item in items:
+            volumes = item.volume.all()
+            pricing = item.pricing.all()
+
+            for volume in volumes:
+                price = pricing.filter(year=volume.year).first()
+                if volume.expected_volume and price:
+                    final_price = sum(filter(None, [
+                        price.base_price,
+                        price.packaging_price,
+                        price.transport_price,
+                        price.warehouse_price
+                    ]))
+                    total_revenue += Decimal(volume.expected_volume) * final_price
+
+        product_labels.append(product.name)
+        product_values.append(float(total_revenue))
+
+    return product_labels, product_values
+
+def get_revenue_and_cost_by_year():
+    years_range = list(range(2025, 2033))
+    revenue_by_year = defaultdict(Decimal)
+    cost_by_year = defaultdict(Decimal)
+    ebit_by_year = defaultdict(Decimal)
+
+    for item in Item.objects.all():
+        volumes = item.volume.all()
+        pricing = item.pricing.all()
+        costing = item.costing.all()
+
+        for volume in volumes:
+            if volume.year not in years_range:
+                continue
+
+            price = pricing.filter(year=volume.year).first()
+            cost = costing.filter(year=volume.year).first()
+
+            if volume.expected_volume and price:
+                final_price = sum(filter(None, [
+                    price.base_price,
+                    price.packaging_price,
+                    price.transport_price,
+                    price.warehouse_price
+                ]))
+                revenue = Decimal(volume.expected_volume) * final_price
+                revenue_by_year[volume.year] += revenue
+
+            if volume.expected_volume and cost:
+                total_cost = sum(filter(None, [
+                    cost.base_cost,
+                    cost.labor_cost,
+                    cost.material_cost,
+                    cost.overhead_cost
+                ]))
+                cost_total = Decimal(volume.expected_volume) * total_cost
+                cost_by_year[volume.year] += cost_total
+
+    for y in years_range:
+        ebit_by_year[y] = revenue_by_year[y] - cost_by_year[y]
+
+    return (
+    years_range,
+    [float(revenue_by_year[y]) for y in years_range],
+    [float(cost_by_year[y]) for y in years_range],
+    [float(ebit_by_year[y]) for y in years_range]
+)
+
+
+def get_volume_projection():
+
+    years_range = list(range(2025, 2033))
+    volume_min_by_year = defaultdict(Decimal)
+    volume_exp_by_year = defaultdict(Decimal)
+    volume_max_by_year = defaultdict(Decimal)
+
+    for item in Item.objects.all():
+        for volume in item.volume.all():
+            if volume.year not in years_range:
+                continue
+
+            if volume.min_volume:
+                volume_min_by_year[volume.year] += Decimal(str(volume.min_volume))
+            if volume.expected_volume:
+                volume_exp_by_year[volume.year] += Decimal(str(volume.expected_volume))
+            if volume.max_volume:
+                volume_max_by_year[volume.year] += Decimal(str(volume.max_volume))
+
+    return ([float(volume_min_by_year[y]) for y in years_range],
+    [float(volume_exp_by_year[y]) for y in years_range],
+    [float(volume_max_by_year[y]) for y in years_range])
 
 
 

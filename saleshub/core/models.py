@@ -104,3 +104,11 @@ class UserRequest(models.Model):
 
     def __str__(self):
         return f"{self.request_type.title()} Request by {self.created_by} ({'Approved' if self.is_approved else 'Pending'})"
+    
+class Contract(models.Model):
+    project = models.ForeignKey('Project', on_delete=models.CASCADE, related_name='contracts')
+    file = models.FileField(upload_to='contracts/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.file.name.split('/')[-1]
