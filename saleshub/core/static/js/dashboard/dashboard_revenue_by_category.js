@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     callbacks: {
                         label: function(context) {
                             let value = context.formattedValue;
-                            return `${context.label}: €${value}`;
+                            return `${context.label}: EUR${value}`;
                         }
                     }
                 }

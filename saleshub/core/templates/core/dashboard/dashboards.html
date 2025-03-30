@@ -11,7 +11,6 @@
     <script src="{% static 'js/dashboard/dashboard_revenue_by_product.js' %}"></script>
     <script src="{% static 'js/dashboard/dashboard_revenue_vs_cost.js' %}"></script>
     <script src="{% static 'js/dashboard/dashboard_volume_projection.js' %}"></script>
-
 {% endblock %}
 
 {% block content %}
@@ -22,6 +21,8 @@
             </canvas>
             {{ category_labels|json_script:"category-labels" }}
             {{ category_values|json_script:"category-values" }}
+            
+            <a href="{% url 'dashboard_category_detail' %}" class="see-details">See Details</a>
         </div>
 
         <div class="dashboard-card">

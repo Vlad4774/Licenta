@@ -11,6 +11,7 @@ import logging
 from django.contrib.admin.views.decorators import staff_member_required
 from decimal import Decimal
 from collections import defaultdict
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -693,6 +694,83 @@ def get_volume_projection():
     return ([float(volume_min_by_year[y]) for y in years_range],
     [float(volume_exp_by_year[y]) for y in years_range],
     [float(volume_max_by_year[y]) for y in years_range])
+
+def dashboard_category_detail(request):
+    selected_year = request.GET.get('year')
+    selected_status = request.GET.get('status')
+
+    category_labels = []
+    category_values = []
+
+    selected_currency = request.GET.get("currency", "EUR")
+
+    available_currencies = []
+    try:
+        currency_response = requests.get("https://open.er-api.com/v6/latest/EUR")
+        if currency_response.status_code == 200:
+            currency_data = currency_response.json()
+            available_currencies = list(currency_data.get("rates", {}).keys())
+    except Exception as e:
+        print("Currency list fetch failed:", e)
+
+    conversion_rate = 1.0
+    if selected_currency != "EUR":
+        try:
+            response = requests.get("https://open.er-api.com/v6/latest/EUR")
+            if response.status_code == 200:
+                data = response.json()
+                conversion_rate = data.get("rates", {}).get(selected_currency, 1.0)
+        except Exception as e:
+            print("Currency fetch failed:", e)
+
+    categories = Category.objects.all()
+
+    for category in categories:
+        total_revenue = Decimal(0)
+        products = category.product_set.all()
+        items = Item.objects.filter(product__in=products)
+
+        if selected_status:
+            items = items.filter(project__acquisition_status=selected_status)
+        if selected_year:
+            items = items.filter(volume__year=selected_year)
+
+        for item in items:
+            volumes = item.volume.all()
+            pricing = item.pricing.all()
+
+            for volume in volumes:
+                if selected_year and str(volume.year) != selected_year:
+                    continue
+
+                price = pricing.filter(year=volume.year).first()
+                if volume.expected_volume and price:
+                    final_price = sum(filter(None, [
+                        price.base_price,
+                        price.packaging_price,
+                        price.transport_price,
+                        price.warehouse_price
+                    ]))
+                    revenue = Decimal(volume.expected_volume) * final_price
+                    total_revenue += revenue
+
+        category_labels.append(category.name)
+        converted_revenue = float(total_revenue) * conversion_rate
+        category_values.append(round(converted_revenue, 2))
+
+    years_range = list(range(2025, 2033))
+    print(conversion_rate)
+
+    return render(request, 'core/dashboard/dashboard_category.html', {
+        'category_labels': category_labels,
+        'category_values': category_values,
+        'selected_year': selected_year,
+        'selected_status': selected_status,
+        'years_range' : years_range,
+        'currency': selected_currency,
+        'currencies': available_currencies,
+    })
+
 
 
 

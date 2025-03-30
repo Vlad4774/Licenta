@@ -40,6 +40,8 @@ urlpatterns = [
 
     #dashboard
     path('dashboard/', views.dashboard_view, name='dashboard'),
+    path('dashboard/category/', views.dashboard_category_detail, name='dashboard_category_detail'),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

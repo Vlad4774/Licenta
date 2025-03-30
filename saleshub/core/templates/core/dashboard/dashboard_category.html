@@ -1,0 +1,53 @@
+{% extends "core/structure/base.html" %}
+{% load static %}
+
+{% block head %}
+    <title>Revenue by Category – Detailed</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static 'css/dashboard/dashboard_category.css' %}">
+    <script src="{% static 'js/dashboard/dashboard_revenue_by_category_detailed.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<h2 class="dashboard-title">Revenue by Category – Detailed View</h2>
+
+<form method="get" class="filter-form">
+    <label>Filter by Year:
+        <select name="year">
+            <option value="">All</option>
+            {% for y in years_range %}
+                <option value="{{ y }}" {% if selected_year == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+        </select>
+    </label>
+
+    <label>Status:
+        <select name="status">
+            <option value="">All</option>
+            <option value="approved" {% if selected_status == 'approved' %}selected{% endif %}>Approved</option>
+            <option value="pending" {% if selected_status == 'pending' %}selected{% endif %}>Pending</option>
+            <option value="rejected" {% if selected_status == 'rejected' %}selected{% endif %}>Rejected</option>
+        </select>
+    </label>
+    
+    <label>Currency:
+        <select name="currency">
+          {% for curr in currencies %}
+            <option value="{{ curr }}" {% if curr == currency %}selected{% endif %}>{{ curr }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      
+
+    <button type="submit">Apply Filters</button>
+    <button id="exportPNG" class="button">Export PNG</button>
+</form>
+
+<canvas id="categoryChart" class="donut-chart" style="max-width: 490px; margin: 0 auto;" data-currency="{{ currency }}">
+</canvas>
+
+{{ category_labels|json_script:"labels" }}
+{{ category_values|json_script:"values" }}
+
+{% endblock %}

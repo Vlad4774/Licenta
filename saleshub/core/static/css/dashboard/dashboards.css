@@ -31,6 +31,11 @@
     flex-direction: column;
     align-items: center;
     transition: transform 0.2s ease;
+    position: relative;
+    padding: 20px;
+    background-color: #222;
+    border-radius: 12px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 
 .dashboard-card:hover {
@@ -54,3 +59,19 @@ canvas {
     display: block;
 }
 
+.see-details {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background-color: #00bcd4;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.see-details:hover {
+    background-color: #008c9e;
+}
