@@ -1,0 +1,37 @@
+{% extends "core/structure/base.html" %}
+{% load static %}
+
+{% block head %}
+    <title>Revenue vs Cost & EBIT</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static 'css/dashboard/dashboard_revenue_cost.css' %}">
+    <script src="{% static 'js/dashboard/dashboard_revenue_cost.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<h2 class="dashboard-title">Revenue vs Cost & EBIT 2025-2032</h2>
+
+<form method="get" class="filter-form">
+    <label>Currency:
+        <select name="currency">
+            {% for curr in currencies %}
+                <option value="{{ curr }}" {% if curr == currency %}selected{% endif %}>{{ curr }}</option>
+            {% endfor %}
+        </select>
+    </label>
+
+    <button type="submit">Apply</button>
+    <button id="exportPNG" class="button" type="button">Export PNG</button>
+</form>
+
+<div class="chart-container">
+    <canvas id="revenueCostChart" data-currency="{{ currency }}"></canvas>
+</div>
+
+{{ years_range|json_script:"years" }}
+{{ revenue_values|json_script:"revenues" }}
+{{ cost_values|json_script:"costs" }}
+{{ ebit_values|json_script:"ebits" }}
+{{ currency|json_script:"currency" }}
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "core/structure/base.html" %}
+{% load static %}
+
+{% block head %}
+    <title>{{ chart_title }}</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static 'css/dashboard/dashboard_volume_prediction.css' %}">
+    <script src="{% static 'js/dashboard/dashboard_volume_prediction.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<h2 class="dashboard-title">{{ chart_title }}</h2>
+
+<form method="get" class="filter-form">
+    <label>Filter by Year:
+        <select name="year">
+            <option value="">All</option>
+            {% for y in years_range %}
+                <option value="{{ y }}" {% if selected_year == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <button type="submit">Apply Filter</button>
+    <button id="exportPNG" class="button" type="button">Export PNG</button>
+</form>
+
+<div class="chart-container">
+    <canvas id="{{ canvas_id }}"></canvas>
+</div>
+
+{{ labels|json_script:"labels" }}
+{{ dataset1|json_script:"dataset1" }}
+{{ dataset2|json_script:"dataset2" }}
+{{ dataset3|json_script:"dataset3" }}
+{{ label1|json_script:"label1" }}
+{{ label2|json_script:"label2" }}
+{{ label3|json_script:"label3" }}
+
+{% endblock %}

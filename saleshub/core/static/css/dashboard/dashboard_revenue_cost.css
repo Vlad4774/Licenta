@@ -44,17 +44,20 @@
     background-color: #009baa;
 }
 
-canvas.donut-chart {
-    width: 100%;
-    max-width: 700px;
-    max-height: 700px;
-    height: auto;
-    margin: 40px auto;
-    display: block;
+.chart-container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
     background-color: #1f1f1f;
     border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 0 12px rgba(0,0,0,0.5);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+}
+
+canvas {
+    width: 100% !important;
+    height: 420px !important;
+    display: block;
 }
 
 @media (max-width: 768px) {
@@ -63,7 +66,11 @@ canvas.donut-chart {
         gap: 15px;
     }
 
-    canvas.donut-chart {
-        max-width: 90%;
+    .chart-container {
+        padding: 10px;
+    }
+
+    canvas {
+        height: 350px !important;
     }
 }

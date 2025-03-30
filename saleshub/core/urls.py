@@ -41,6 +41,11 @@ urlpatterns = [
     #dashboard
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('dashboard/category/', views.dashboard_category_detail, name='dashboard_category_detail'),
+    path('dashboard/location/', views.dashboard_location_detail, name='dashboard_location_detail'),
+    path('dashboard/customer/', views.dashboard_customer_detail, name='dashboard_customer_detail'),
+    path('dashboard/product/', views.dashboard_product_detail, name='dashboard_product_detail'),
+    path('dashboard/revenue-cost/', views.dashboard_revenue_cost, name='dashboard_revenue_cost'),
+    path('dashboard/volume-prediction/', views.dashboard_volume_prediciton, name='dashboard_volume_prediction'),
 
 ]
 

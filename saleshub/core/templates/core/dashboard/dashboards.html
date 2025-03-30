@@ -31,6 +31,8 @@
             </canvas>
             {{ location_labels|json_script:"location-labels" }}
             {{ location_values|json_script:"location-values" }}
+
+            <a href="{% url 'dashboard_location_detail' %}" class="see-details">See Details</a>
         </div>
 
         <div class="dashboard-card">
@@ -40,6 +42,8 @@
             <canvas id="chartCustomer" class="donut-chart"></canvas>
             {{ customer_labels|json_script:"customer-labels" }}
             {{ customer_values|json_script:"customer-values" }}
+
+            <a href="{% url 'dashboard_customer_detail' %}" class="see-details">See Details</a>
         </div>
 
         <div class="dashboard-card">
@@ -48,6 +52,8 @@
             </canvas>
             {{ product_labels|json_script:"product-labels" }}
             {{ product_values|json_script:"product-values" }}
+
+            <a href="{% url 'dashboard_product_detail' %}" class="see-details">See Details</a>
         </div>
 
         <div class="dashboard-card">
@@ -58,6 +64,8 @@
             {{ revenue_values|json_script:"revenue-values" }}
             {{ cost_values|json_script:"cost-values" }}
             {{ ebit_values|json_script:"ebit-values" }}
+
+            <a href="{% url 'dashboard_revenue_cost' %}" class="see-details">See Details</a>
         </div>
 
         <div class="dashboard-card">
@@ -67,6 +75,8 @@
             {{ volume_min|json_script:"volume-min" }}
             {{ volume_exp|json_script:"volume-exp" }}
             {{ volume_max|json_script:"volume-max" }}
+
+            <a href="{% url 'dashboard_volume_prediction' %}" class="see-details">See Details</a>
         </div>
 
     </div>

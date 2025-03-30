@@ -75,3 +75,19 @@ canvas {
 .see-details:hover {
     background-color: #008c9e;
 }
+
+.chart-container {
+    display: flex;
+    align-items: center;      /* ← Asta aliniează vertical */
+    justify-content: center;
+    gap: 50px;
+    height: 500px;            /* ← Fixează o înălțime ca să alinieze corect pe mijloc */
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+canvas.donut-chart {
+    max-width: 500px;
+    max-height: 500px;
+    padding: 20px;
+}

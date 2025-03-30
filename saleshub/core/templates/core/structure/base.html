@@ -47,9 +47,9 @@
         </nav>
         {% endif %}
 
-        {% if request.path == '/home/' or request.path|is_production_page %}
+        {% if request.path != '/get-started/' and request.path != '/login/' %}
         <div class="saleshub-search-bar">
-            <input type="text" placeholder="Search product or category" />
+            <input type="text" placeholder="Search Here" />
         </div>
 
         <div class="saleshub-profile">

@@ -695,40 +695,30 @@ def get_volume_projection():
     [float(volume_exp_by_year[y]) for y in years_range],
     [float(volume_max_by_year[y]) for y in years_range])
 
-def dashboard_category_detail(request):
+#----------------------------detailed-----------------------------------------------------------------------------------------------------------
+
+def get_revenue_data_by(queryset, get_items_fn, request):
     selected_year = request.GET.get('year')
     selected_status = request.GET.get('status')
+    selected_currency = request.GET.get('currency', 'EUR')
 
-    category_labels = []
-    category_values = []
-
-    selected_currency = request.GET.get("currency", "EUR")
-
-    available_currencies = []
-    try:
-        currency_response = requests.get("https://open.er-api.com/v6/latest/EUR")
-        if currency_response.status_code == 200:
-            currency_data = currency_response.json()
-            available_currencies = list(currency_data.get("rates", {}).keys())
-    except Exception as e:
-        print("Currency list fetch failed:", e)
-
+    # conversie valută
+    currencies = ['EUR']
     conversion_rate = 1.0
-    if selected_currency != "EUR":
-        try:
-            response = requests.get("https://open.er-api.com/v6/latest/EUR")
-            if response.status_code == 200:
-                data = response.json()
-                conversion_rate = data.get("rates", {}).get(selected_currency, 1.0)
-        except Exception as e:
-            print("Currency fetch failed:", e)
+    try:
+        response = requests.get("https://open.er-api.com/v6/latest/EUR")
+        if response.status_code == 200:
+            data = response.json()
+            currencies = list(data.get("rates", {}).keys())
+            conversion_rate = data.get("rates", {}).get(selected_currency, 1.0)
+    except Exception as e:
+        print("Currency API error:", e)
 
-    categories = Category.objects.all()
+    labels, values = [], []
 
-    for category in categories:
+    for obj in queryset:
         total_revenue = Decimal(0)
-        products = category.product_set.all()
-        items = Item.objects.filter(product__in=products)
+        items = get_items_fn(obj)
 
         if selected_status:
             items = items.filter(project__acquisition_status=selected_status)
@@ -736,14 +726,10 @@ def dashboard_category_detail(request):
             items = items.filter(volume__year=selected_year)
 
         for item in items:
-            volumes = item.volume.all()
-            pricing = item.pricing.all()
-
-            for volume in volumes:
+            for volume in item.volume.all():
                 if selected_year and str(volume.year) != selected_year:
                     continue
-
-                price = pricing.filter(year=volume.year).first()
+                price = item.pricing.filter(year=volume.year).first()
                 if volume.expected_volume and price:
                     final_price = sum(filter(None, [
                         price.base_price,
@@ -751,25 +737,204 @@ def dashboard_category_detail(request):
                         price.transport_price,
                         price.warehouse_price
                     ]))
-                    revenue = Decimal(volume.expected_volume) * final_price
-                    total_revenue += revenue
+                    total_revenue += Decimal(volume.expected_volume) * final_price
 
-        category_labels.append(category.name)
-        converted_revenue = float(total_revenue) * conversion_rate
-        category_values.append(round(converted_revenue, 2))
+        labels.append(str(obj))
+        values.append(round(float(total_revenue) * conversion_rate, 2))
 
-    years_range = list(range(2025, 2033))
-    print(conversion_rate)
+    return labels, values, currencies, selected_currency
 
-    return render(request, 'core/dashboard/dashboard_category.html', {
-        'category_labels': category_labels,
-        'category_values': category_values,
-        'selected_year': selected_year,
-        'selected_status': selected_status,
-        'years_range' : years_range,
+def dashboard_category_detail(request):
+    labels, values, currencies, selected_currency = get_revenue_data_by(
+        Category.objects.all(),
+        lambda category: Item.objects.filter(product__category=category),
+        request
+    )
+    return render(request, 'core/dashboard/dashboard_donut.html', {
+        'labels': labels,
+        'values': values,
+        'currencies': sorted(currencies),
         'currency': selected_currency,
-        'currencies': available_currencies,
+        'years_range': list(range(2025, 2033)),
+        'selected_year': request.GET.get('year'),
+        'selected_status': request.GET.get('status'),
+        'chart_title': 'Revenue by Category',
+        'canvas_id': 'categoryChart',
+        'export_name': 'revenue_by_category'
     })
+
+def dashboard_location_detail(request):
+    labels, values, currencies, selected_currency = get_revenue_data_by(
+        Location.objects.all(),
+        lambda location: Item.objects.filter(location=location),
+        request
+    )
+    return render(request, 'core/dashboard/dashboard_donut.html', {
+        'labels': labels,
+        'values': values,
+        'currencies': sorted(currencies),
+        'currency': selected_currency,
+        'years_range': list(range(2025, 2033)),
+        'selected_year': request.GET.get('year'),
+        'selected_status': request.GET.get('status'),
+        'chart_title': 'Revenue by Location',
+        'canvas_id': 'locationChart',
+        'export_name': 'revenue_by_location'
+    })
+
+
+def dashboard_customer_detail(request):
+    labels, values, currencies, selected_currency = get_revenue_data_by(
+        Customer.objects.all(),
+        lambda customer: Item.objects.filter(project__customer=customer),
+        request
+    )
+    return render(request, 'core/dashboard/dashboard_donut.html', {
+        'labels': labels,
+        'values': values,
+        'currencies': sorted(currencies),
+        'currency': selected_currency,
+        'years_range': list(range(2025, 2033)),
+        'selected_year': request.GET.get('year'),
+        'selected_status': request.GET.get('status'),
+        'chart_title': 'Revenue by Customer',
+        'canvas_id': 'customerChart',
+        'export_name': 'revenue_by_customer'
+    })
+
+def dashboard_product_detail(request):
+    labels, values, currencies, selected_currency = get_revenue_data_by(
+        Product.objects.all(),
+        lambda product: Item.objects.filter(product=product),
+        request
+    )
+    return render(request, 'core/dashboard/dashboard_donut.html', {
+        'labels': labels,
+        'values': values,
+        'currencies': sorted(currencies),
+        'currency': selected_currency,
+        'years_range': list(range(2025, 2033)),
+        'selected_year': request.GET.get('year'),
+        'selected_status': request.GET.get('status'),
+        'chart_title': 'Revenue by Product',
+        'canvas_id': 'productChart',
+        'export_name': 'revenue_by_product'
+    })
+
+def dashboard_revenue_cost(request):
+    selected_currency = request.GET.get('currency', 'EUR')
+    years_range = list(range(2025, 2033))
+
+    currencies = ['EUR']
+    conversion_rate = 1.0
+
+    # Valute și conversie
+    try:
+        response = requests.get("https://open.er-api.com/v6/latest/EUR")
+        if response.status_code == 200:
+            data = response.json()
+            currencies = list(data.get("rates", {}).keys())
+            conversion_rate = data.get("rates", {}).get(selected_currency, 1.0)
+    except Exception as e:
+        print("Currency API error:", e)
+
+    revenue_by_year = defaultdict(Decimal)
+    cost_by_year = defaultdict(Decimal)
+    ebit_by_year = defaultdict(Decimal)
+
+    for item in Item.objects.all():
+        volumes = item.volume.all()
+        pricing = item.pricing.all()
+        costing = item.costing.all()
+
+        for volume in volumes:
+            year = volume.year
+            if year not in years_range:
+                continue
+
+            price = pricing.filter(year=year).first()
+            cost = costing.filter(year=year).first()
+
+            if volume.expected_volume and price:
+                final_price = sum(filter(None, [
+                    price.base_price,
+                    price.packaging_price,
+                    price.transport_price,
+                    price.warehouse_price
+                ]))
+                revenue = Decimal(volume.expected_volume) * final_price
+                revenue_by_year[year] += revenue
+
+            if volume.expected_volume and cost:
+                total_cost = sum(filter(None, [
+                    cost.base_cost,
+                    cost.labor_cost,
+                    cost.material_cost,
+                    cost.overhead_cost
+                ]))
+                cost_total = Decimal(volume.expected_volume) * total_cost
+                cost_by_year[year] += cost_total
+
+    for y in years_range:
+        ebit_by_year[y] = revenue_by_year[y] - cost_by_year[y]
+
+    # Convertim în listă pentru JavaScript + valută
+    revenue_list = [round(float(revenue_by_year[y]) * conversion_rate, 2) for y in years_range]
+    cost_list = [round(float(cost_by_year[y]) * conversion_rate, 2) for y in years_range]
+    ebit_list = [round(float(ebit_by_year[y]) * conversion_rate, 2) for y in years_range]
+
+    return render(request, 'core/dashboard/dashboard_revenue_cost.html', {
+        'years_range': years_range,
+        'revenue_values': revenue_list,
+        'cost_values': cost_list,
+        'ebit_values': ebit_list,
+        'currencies': sorted(currencies),
+        'currency': selected_currency
+    })
+
+# views.py
+from collections import defaultdict
+from decimal import Decimal
+
+@login_required
+def dashboard_volume_prediciton(request):
+    selected_year = request.GET.get("year")
+    years_range = list(range(2025, 2033))
+
+    volume_min = defaultdict(Decimal)
+    volume_exp = defaultdict(Decimal)
+    volume_max = defaultdict(Decimal)
+
+    for item in Item.objects.all():
+        for volume in item.volume.all():
+            if selected_year and str(volume.year) != selected_year:
+                continue
+
+            if volume.min_volume:
+                volume_min[volume.year] += Decimal(str(volume.min_volume))
+            if volume.expected_volume:
+                volume_exp[volume.year] += Decimal(str(volume.expected_volume))
+            if volume.max_volume:
+                volume_max[volume.year] += Decimal(str(volume.max_volume))
+
+    return render(request, "core/dashboard/dashboard_volume_prediction.html", {
+        "chart_title": "Volume Projection",
+        "years_range": years_range,
+        "selected_year": selected_year,
+        "labels": list(volume_exp.keys()),
+        "dataset1": list(volume_min.values()),
+        "dataset2": list(volume_exp.values()),
+        "dataset3": list(volume_max.values()),
+        "label1": "Min Volume",
+        "label2": "Expected Volume",
+        "label3": "Max Volume",
+        "canvas_id": "volumeProjectionChart"
+    })
+
+
+
+
+
 
 
 
