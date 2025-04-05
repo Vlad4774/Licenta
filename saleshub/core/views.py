@@ -326,8 +326,35 @@ def add_item_to_project(request, project_id):
 
 #------------------------------------------------------------ITEM---------------------------------------------------------------------------------------------------
 
-def item_read_or_update(request, project_id, item_id):
-    item = get_object_or_404(Item, id=item_id, project_id=project_id)
+@login_required
+def item_list(request):
+    search_project = request.GET.get('project', '')
+    search_product = request.GET.get('product', '')
+    search_location = request.GET.get('location', '')
+
+    items = Item.objects.all()
+
+    if search_project:
+        items = items.filter(project__name__icontains=search_project)
+    if search_product:
+        items = items.filter(product__name__icontains=search_product)
+    if search_location:
+        items = items.filter(location__city__icontains=search_location)
+
+    paginator = Paginator(items, 10)
+    page = request.GET.get('page')
+    items_paginated = paginator.get_page(page)
+
+    context = {
+        'items': items_paginated,
+        'search_project': search_project,
+        'search_product': search_product,
+        'search_location': search_location,
+    }
+    return render(request, 'core/item/item_list.html', context)
+
+def item_read_or_update(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
 
     volume = Volume.objects.filter(item=item)
     pricings = Pricing.objects.filter(item=item)

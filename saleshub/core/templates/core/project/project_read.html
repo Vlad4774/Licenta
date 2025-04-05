@@ -87,7 +87,7 @@
                             <td>{{ item.product.name }}</td>
                             <td>{{ item.location }}</td>
                             <td>
-                                <a href="{% url 'item_read_or_update' project.id item.id %}" class="btn btn-info">View/Edit</a>
+                                <a href="{% url 'item_read_or_update' item.id %}" class="btn btn-info">View/Edit</a>
                                 <a href="{% url 'item_delete' item.id %}" class="btn btn-danger">Delete</a>
                             </td>
                         </tr>

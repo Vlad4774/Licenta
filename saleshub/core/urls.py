@@ -29,7 +29,8 @@ urlpatterns = [
     path('project/<int:project_id>/add-item/', views.add_item_to_project, name='add_item_to_project'),
 
     #item
-    path('project/<int:project_id>/item/<int:item_id>/', views.item_read_or_update, name='item_read_or_update'),
+    path('item/<int:item_id>/', views.item_read_or_update, name='item_read_or_update'),
+    path('items/', views.item_list, name='item_list'),
     path('item/<int:item_id>/delete/', views.item_delete_view, name='item_delete'),
     path('item/<int:item_id>/volume/', views.get_volume_data, name='get_volume_data'),
     path('item/<int:item_id>/pricing/', views.get_pricing_data, name='get_pricing_data'),
