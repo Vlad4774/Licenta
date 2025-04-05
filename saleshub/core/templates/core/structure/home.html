@@ -68,6 +68,14 @@
 
         <div class="info-part right">
             <h3>News</h3>
+            <ul class="news-list">
+                {% for article in news_articles %}
+                    <li class="news-item">
+                        <a href="{{ article.url }}" target="_blank">{{ article.title }}</a>
+                        <div class="news-date">{{ article.source.name }}</div>
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
     </section>
 

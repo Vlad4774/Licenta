@@ -1,5 +1,9 @@
 from django import forms
-from .models import Product, Category, Customer, Location, Project, Item, Contract
+from .models import Product, Category, Customer, Location, Project, Item, Contract, CustomUser
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -54,3 +58,25 @@ class ContractUploadForm(forms.ModelForm):
     class Meta:
         model = Contract
         fields = ['file']
+      
+User = get_user_model()      
+
+class RegisterForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(label='Name', required=True)
+    profile_picture = forms.ImageField(required=False)
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'email', 'password1', 'password2', 'profile_picture']
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("Un cont cu acest email există deja.")
+        return email
+    
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['first_name', 'email', 'profile_picture']

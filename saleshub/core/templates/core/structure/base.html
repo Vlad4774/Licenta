@@ -27,7 +27,7 @@
         </div>
         
         
-        {% if request.path == '/' or request.path == '/login/' %}
+        {% if request.path|is_unregistred_page %}
         <nav class="saleshub-navigation">
             <ul>
                 <li><a href="#home">Home</a></li>
@@ -36,44 +36,70 @@
                 <li><a href="#blog">Blog</a></li> 
                 <li><a href="#contact">Contact</a></li>
             </ul>
-        </nav>
-        {% endif %}
 
-        {% if request.path == '/' %}
-        <nav class="saleshub-login">
             <div class="saleshub-login-button">
                 <a href="{% url 'login' %}">Login</a>
             </div>
         </nav>
         {% endif %}
 
-        {% if request.path != '/get-started/' and request.path != '/login/' %}
+        {% if not request.path|is_unregistred_page %}
         <div class="saleshub-search-bar">
             <input type="text" placeholder="Search Here" />
         </div>
 
-        <div class="saleshub-profile">
-            <img src="{% static 'images/profile.jpg' %}" alt="Profile Picture" class="saleshub-profile-pic" />
-            <div class="saleshub-profile-info">
-                <p class="saleshub-profile-name">{{ request.user.username }}</p>
+        <div class="saleshub-profile-wrapper">
+            <div class="saleshub-profile-toggle" id="profileToggle">
+                <img src="{% if request.user.profile_picture %}{{ request.user.profile_picture.url }}{% else %}{% static 'images/default_profile.jpg' %}{% endif %}" alt="Profile Picture" class="saleshub-profile-pic" />
+                <span class="saleshub-profile-name">{{ request.user.first_name }}</span>
+            </div>
+        
+            <div class="saleshub-profile-menu" id="profileMenu">
+                <a href="{% url 'edit_profile' %}">Edit Profile</a>
+                <form method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-button">Logout</button>
+                </form>
             </div>
         </div>
+        
+             
         {% endif %}
     </div> 
 </header>
 
 {% block content %}{% endblock %}
 
-{% if request.path == '/' or request.path == '/login/'%}
+{% if request.path|is_unregistred_page %}
 <footer class="saleshub-footer">
     <div class="saleshub-container">
          <h3 class="saleshub-footer-title">Contact Us</h3>
-                <p>Email: <a href="vladbaracut7@yahoo.com">support@salesHub.com</a></p>
+                <p>Email: <a href="vladbaracut7@yahoo.com">support@saleshub.com</a></p>
                 <p>Phone: <a href="tel:+1234567890">+1 234 567 890</a></p>
-                <p>&copy; 2024 SalesHub. All rights reserved.</p>
+                <p>&copy; 2025 SalesHub. All rights reserved.</p>
     </div>
 </footer>
 {% endif %}
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggle = document.getElementById('profileToggle');
+        const menu = document.getElementById('profileMenu');
+        const wrapper = document.querySelector('.saleshub-profile-wrapper');
+    
+        if (toggle && menu && wrapper) {
+            toggle.addEventListener('click', function (e) {
+                e.stopPropagation();
+                wrapper.classList.toggle('open');
+            });
+    
+            document.addEventListener('click', function (e) {
+                if (!wrapper.contains(e.target)) {
+                    wrapper.classList.remove('open');
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>

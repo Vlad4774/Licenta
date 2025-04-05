@@ -1,0 +1,15 @@
+{% extends 'core/structure/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/project/project_create_or_edit.css' %}">
+{% endblock %}
+
+{% block content %}
+<h2>Register</h2>
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Create account</button>
+</form>
+{% endblock %}

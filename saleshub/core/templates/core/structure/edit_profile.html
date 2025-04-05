@@ -1,0 +1,19 @@
+{% extends "core/structure/base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/structure/edit_profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="edit-profile-page">
+    <div class="container">
+        <h2>Edit Profile</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -2,12 +2,18 @@ from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
+
 
 urlpatterns = [
     #structure
     path('', views.get_started, name='get_started'),
     path('home/', views.home, name='home'),
     path('login/', views.user_login, name='login'),
+    path('register/', views.register_view, name='register'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('profile/edit/', views.edit_profile, name='edit_profile'),
+
 
     #product
     path('product/', views.show_products, name='product_list'),

@@ -1,5 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
+from django.conf import settings
+
+class CustomUser(AbstractUser):
+    email = models.EmailField(unique=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True, default='default_profile.jpg')
 
 class Category(models.Model):
 
@@ -49,13 +54,12 @@ class Project(models.Model):
     dos = models.DateField(verbose_name="Date of Start")
     sop = models.DateField(verbose_name="Start of Production")
     eop = models.DateField(verbose_name="End of Production")
-    responsible = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, default=1)
+    responsible = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, editable=False, default=1)
     products = models.ManyToManyField('Product', related_name='projects', blank=True)
 
     def __str__(self):
         return f"{self.name} ({self.customer.name})"
     
-
 class Item(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -98,7 +102,7 @@ class UserRequest(models.Model):
 
     request_type = models.CharField(max_length=20, choices=REQUEST_TYPE_CHOICES)
     data = models.JSONField()  # aici salvăm toate datele completate în formular
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_approved = models.BooleanField(default=False)
 

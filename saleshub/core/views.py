@@ -6,11 +6,12 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.core.exceptions import ObjectDoesNotExist
-from .forms import ProductForm, ProjectForm, ItemForm, CategoryRequestForm, LocationRequestForm, CustomerRequestForm, ContractUploadForm
+from .forms import ProductForm, ProjectForm, ItemForm, CategoryRequestForm, LocationRequestForm, CustomerRequestForm, ContractUploadForm, RegisterForm, EditProfileForm
 import logging
 from django.contrib.admin.views.decorators import staff_member_required
 from decimal import Decimal
 from collections import defaultdict
+from django.contrib.auth import login
 import requests
 
 logger = logging.getLogger(__name__)
@@ -42,11 +43,13 @@ def home(request):
 
     labels = list(revenue_by_status.keys())
     values = list(revenue_by_status.values())
+    news_articles = get_economic_news()
 
     return render(request, 'core/structure/home.html', {
         'products': products,
         'labels': labels,
-        'values': values
+        'values': values,
+        'news_articles': news_articles
     })
 
 def get_started(request):
@@ -64,7 +67,59 @@ def user_login(request):
             return redirect('home')
         else:
             return render(request, 'core/structure/login.html', {'error': 'Invalid credentials'})
+        
     return render(request, 'core/structure/login.html')
+
+def register_view(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = RegisterForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = form.save(commit=False)
+            if not user.profile_picture:
+                user.profile_picture = 'default_profile.jpg'
+            user.username = user.email  # dacă nu folosești username, poți seta aici
+            user.save()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = RegisterForm()
+    return render(request, 'core/structure/register.html', {'form': form})
+
+def get_economic_news():
+    api_key = '560a805d15d64a38a76e156c614c7790'  # ← pune aici cheia ta
+    url = 'https://newsapi.org/v2/everything'
+    params = {
+        'q': 'stocks OR market OR trading OR equites',
+        'language': 'en',
+        'sortBy': 'publishedAt',
+        'pageSize': 5,
+        'apiKey': api_key
+    }
+
+    try:
+        response = requests.get(url, params=params)
+        data = response.json()
+        return data.get('articles', [])
+    except Exception as e:
+        print("Failed to fetch economic news:", e)
+        return []
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('home')  # sau redirect('edit_profile') pentru a rămâne pe pagină
+    else:
+        form = EditProfileForm(instance=request.user)
+
+    return render(request, 'core/structure/edit_profile.html', {'form': form})
+
+
 
 #-------------------------------------------------------------------PRODUCT----------------------------------------------------------------------------------------
 
