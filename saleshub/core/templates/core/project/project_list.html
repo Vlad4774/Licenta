@@ -2,14 +2,35 @@
 {% load static %}
 
 {% block head%}
-<link rel="stylesheet" href="{% static 'css/project/project_list.css' %}">
+<link rel="stylesheet" href="{% static 'css/structure/list.css' %}">
 {% endblock %}
 
 {% block content %}
 <h2>Project List</h2>
 <a href="{% url 'project_create' %}" class="create">Create New Project</a>
+
 <table class="table">
     <thead>
+        <tr>
+            <th>
+                <form method="get">
+                    <input type="text" name="name" value="{{ search_name }}" placeholder="Filter..." />
+            </th>
+            <th>
+                    <input type="text" name="customer" value="{{ search_customer }}" placeholder="Filter..." />
+            </th>
+            <th>
+                    <input type="text" name="status" value="{{ search_status }}" placeholder="Filter..." />
+            </th>
+            <th></th>
+            <th>
+                    <input type="text" name="responsible" value="{{ search_responsible }}" placeholder="Filter..." />
+            </th>
+            <th>
+                    <button type="submit" class="btn btn-filter">Apply</button>
+                </form>
+            </th>
+        </tr>
         <tr>
             <th>Name</th>
             <th>Customer</th>
@@ -18,7 +39,7 @@
             <th>Responsible</th>
             <th>Actions</th>
         </tr>
-    </thead>
+    </thead>    
     <tbody>
         {% for project in projects %}
         <tr>
@@ -38,4 +59,17 @@
         {% endfor %}
     </tbody>
 </table>
+
+<div class="pagination">
+    {% if projects.has_previous %}
+        <a href="?page={{ projects.previous_page_number }}{% if request.GET.name %}&name={{ request.GET.name }}{% endif %}{% if request.GET.customer %}&customer={{ request.GET.customer }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.responsible %}&responsible={{ request.GET.responsible }}{% endif %}">Previous</a>
+    {% endif %}
+
+    <span>Page {{ projects.number }} of {{ projects.paginator.num_pages }}</span>
+
+    {% if projects.has_next %}
+        <a href="?page={{ projects.next_page_number }}{% if request.GET.name %}&name={{ request.GET.name }}{% endif %}{% if request.GET.customer %}&customer={{ request.GET.customer }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.responsible %}&responsible={{ request.GET.responsible }}{% endif %}">Next</a>
+    {% endif %}
+</div>
+
 {% endblock %}

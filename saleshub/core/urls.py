@@ -14,10 +14,8 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
 
-
     #product
     path('product/', views.show_products, name='product_list'),
-    path('product/<int:id>/', views.product_detail, name='product_detail'),
     path('product/<int:id>/delete/', views.delete_product, name='product_delete'),
     path('product/create', views.create_or_edit_product, name='product_create'),
     path('product/<int:id>/edit/', views.create_or_edit_product, name='product_edit'),

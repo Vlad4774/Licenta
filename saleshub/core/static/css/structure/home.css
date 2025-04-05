@@ -1,36 +1,36 @@
 .button-section {
-    background-color: #1f1f1f; /* Dark background */
-    padding: 20px 0; /* Padding for the section */
-    text-align: center; /* Center text */
+    background-color: #1f1f1f;
+    padding: 20px 0; 
+    text-align: center;
 }
 
 .button-section-title {
-    color: #00bcd4; /* Title color */
-    margin-bottom: 30px; /* Space below the title */
-    font-size: 24px; /* Title font size */
+    color: #00bcd4;
+    margin-bottom: 30px;
+    font-size: 24px;
 }
 
 .button-group {
-    display: flex; /* Flexbox for button layout */
-    justify-content: center; /* Center buttons */
-    flex-wrap: wrap; /* Allow buttons to wrap */
-    gap: 15px; /* Space between buttons */
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 .button {
-    background-color: #00bcd4; /* Button background color */
-    color: #ffffff; /* Text color for buttons */
-    padding: 10px 15px; /* Padding for the buttons */
-    text-decoration: none; /* Remove underline */
-    border-radius: 5px; /* Rounded corners for buttons */
-    text-align: center; /* Center text inside buttons */
-    flex: 1; /* Allow buttons to grow */
-    min-width: 120px; /* Minimum width for buttons */
+    background-color: #00bcd4;
+    color: #ffffff;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px; 
+    text-align: center;
+    flex: 1;
+    min-width: 120px;
 }
 
 .button:hover {
-    background-color: #008c9e; /* Darker highlight color */
-    transform: translateY(-2px); /* Lift effect on hover */
+    background-color: #008c9e; 
+    transform: translateY(-2px);
 }
 
 .info-section {
@@ -75,6 +75,8 @@
 
 /* Product list styling */
 
+/* Product list styling */
+
 .product-list {
     list-style: none;
     padding: 0;
@@ -83,32 +85,43 @@
 
 .product-item {
     margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+    padding: 12px;
+    border: 1px solid ;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    background-color: #1f1f1f;
+    cursor: default;
+    height: 47px;
 }
 
 .product-item:hover {
     background-color: #2c2c2c;
+    transform: translateY(-2px);
 }
 
-.product-item a {
+.product-item .Product {
     font-size: 16px;
     font-weight: bold;
-    color: #007bff;
-    text-decoration: none;
-}
-
-.product-item a:hover {
-    text-decoration: underline;
+    color: #00bcd4;
+    margin: 0;
+    padding: 0;
 }
 
 .short-description {
     font-size: 14px;
-    color: #aaa;
+    color: #bbb;
     margin-top: 5px;
     line-height: 1.4;
+}
+
+.info-part.left h3 {
+    color: #00bcd4;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+    border-bottom: 2px solid #00bcd4;
+    padding-bottom: 5px;
 }
 
 /* ========== CENTER CHART ========== */
@@ -160,6 +173,23 @@
     display: block;
 }
 
+.pagination {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.pagination a {
+    padding: 8px 12px;
+    background-color: #00bcd4;
+    color: white;
+    text-decoration: none;
+    margin: 0 5px;
+    border-radius: 4px;
+}
+
+.pagination a:hover {
+    background-color: #008c9e;
+}
 
 
 

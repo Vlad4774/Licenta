@@ -13,6 +13,7 @@ from decimal import Decimal
 from collections import defaultdict
 from django.contrib.auth import login
 import requests
+from django.core.paginator import Paginator
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +22,9 @@ logger = logging.getLogger(__name__)
 @login_required
 def home(request):
     products = Product.objects.all()
+    paginator = Paginator(products, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
     status_values = ['approved', 'pending', 'rejected']
     revenue_by_status = {}
@@ -46,7 +50,7 @@ def home(request):
     news_articles = get_economic_news()
 
     return render(request, 'core/structure/home.html', {
-        'products': products,
+        'products': page_obj,
         'labels': labels,
         'values': values,
         'news_articles': news_articles
@@ -125,50 +129,46 @@ def edit_profile(request):
 
 @login_required
 def show_products(request):
-    products = Product.objects.all()
-    return render(request, 'core/product/product_list.html', {'products': products})
+    search_name = request.GET.get("name", "")
+    search_description = request.GET.get("short_description", "")
+    search_category = request.GET.get("category", "")
 
-@login_required
-def product_detail(request, id):
-    product = Product.objects.get(id=id)
-    product_data = {
-        'name': product.name,
-        'short_description': product.short_description,
-        'description': product.description,
-        'category': product.category.name if product.category else 'N/A', 
-        'sold_to': product.sold_to.name if product.sold_to else 'N/A',     
-        'location': product.location.name if product.location else 'N/A', 
-    }
-    volumes = Volume.objects.filter(product=product)
-    volume_data = list(volumes.values('year', 'min_volume', 'expected_volume', 'max_volume'))
-    prices = Pricing.objects.filter(product=product)
-    prices_data = list(prices.values('year', 'base_price', 'packaging_price', 'transport_price', 'warehouse_price'))
-    costs = Cost.objects.filter(product=product)
-    costs_data = list(costs.values('year', 'base_cost', 'labor_cost', 'material_cost', 'overhead_cost'))
-    return render(request, 'core/product/product_read.html', {
-        'product_data': product_data,
-        'volume_data': volume_data,
-        'prices_data': prices_data,
-        'costs_data': costs_data,
+    products = Product.objects.select_related("category").all()
+
+    if search_name:
+        products = products.filter(name__icontains=search_name)
+    if search_description:
+        products = products.filter(short_description__icontains=search_description)
+    if search_category:
+        products = products.filter(category__name__icontains=search_category)
+
+    paginator = Paginator(products.distinct(), 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "core/product/product_list.html", {
+        "products": page_obj,
+        "search_name": search_name,
+        "search_description": search_description,
+        "search_category": search_category,
     })
 
 @login_required
 def create_or_edit_product(request, id=None):
-
-    if id:
-        product = get_object_or_404(Product, id=id)
-    else:
-        product = None
+    product = get_object_or_404(Product, id=id) if id else None
 
     if request.method == "POST":
-        form = ProductForm(request.POST, instance = product)
+        form = ProductForm(request.POST, instance=product)
         if form.is_valid():
             form.save()
             return redirect('product_list')
     else:
-        form = ProductForm()
+        form = ProductForm(instance=product) 
 
-    return render(request, 'core/product/product_create_or_edit.html', {'form': form})
+    return render(request, 'core/product/product_create_or_edit.html', {
+        'form': form,
+        'object': product
+    })
 
 @login_required
 def delete_product(request, id):
@@ -184,8 +184,38 @@ def delete_product(request, id):
 
 @login_required
 def show_projects(request):
-    projects = Project.objects.all(); 
-    return render(request, 'core/project/project_list.html', {'projects': projects})
+
+    search_name = request.GET.get("name", "")
+    search_customer = request.GET.get("customer", "")
+    search_status = request.GET.get("status", "")
+    search_responsible = request.GET.get("responsible", "")
+
+    projects = Project.objects.all()
+
+    if search_name:
+        projects = projects.filter(name__icontains=search_name)
+
+    if search_customer:
+        projects = projects.filter(customer__name__icontains=search_customer)
+
+    if search_status:
+        projects = projects.filter(acquisition_status__icontains=search_status)
+
+    if search_responsible:
+        projects = projects.filter(responsible__first_name__icontains=search_responsible)
+
+    paginator = Paginator(projects, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "core/project/project_list.html", {
+        "projects": page_obj,
+        "search_name": search_name,
+        "search_customer": search_customer,
+        "search_status": search_status,
+        "search_responsible": search_responsible,
+    })
+
 
 @login_required
 def create_or_edit_project(request, id=None):
@@ -220,7 +250,6 @@ def view_project(request, id):
             contract.save()
             return redirect('project_read', id=project.id)
 
-    # Update proiect
     elif request.method == "POST":
         project.dos = request.POST.get('dos')
         project.sop = request.POST.get('sop')
@@ -230,7 +259,6 @@ def view_project(request, id):
         project.save()
         return redirect('project_read', pk=project.id)
 
-    # Form de upload gol pentru template
     contract_form = ContractUploadForm()
 
     return render(request, 'core/project/project_read.html', {

@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" href="{% static 'css/project/project_delete.css' %}">
+<link rel="stylesheet" href="{% static 'css/structure/delete.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -13,7 +13,7 @@
     <form method="POST">
         {% csrf_token %}
         <div class="delete-buttons">
-            <button type="submit" class="btn-danger">Yes, Delete</button>
+            <button type="submit" class="btn-danger">Delete</button>
             <a href="{% url 'project_list' %}" class="btn-secondary">Cancel</a>
         </div>
     </form>

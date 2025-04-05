@@ -27,13 +27,24 @@
             <ul class="product-list">
                 {% for product in products %}
                     <li class="product-item">
-                        <a href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
+                        <p class="Product">{{ product.name }}</a>
                         <p class="short-description">{{ product.short_description }}</p>
                     </li>
                 {% empty %}
                     <li>No products available.</li>
                 {% endfor %}
             </ul>
+            <div class="pagination">
+                {% if products.has_previous %}
+                    <a href="?page={{ products.previous_page_number }}">&laquo; Previous</a>
+                {% endif %}
+            
+                <span>Page {{ products.number }} of {{ products.paginator.num_pages }}</span>
+            
+                {% if products.has_next %}
+                    <a href="?page={{ products.next_page_number }}">Next &raquo;</a>
+                {% endif %}
+            </div>            
         </div>
 
         <div class="info-part center">

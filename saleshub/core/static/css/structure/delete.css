@@ -1,7 +1,7 @@
 
 .delete-container {
     max-width: 800px;
-    margin: 100px auto 0 auto; /* Asigură spațiu sub navbar */
+    margin: 100px auto 0 auto; 
     background-color: #1f1f1f;
     padding: 20px;
     border-radius: 8px;
@@ -9,27 +9,22 @@
     text-align: center;
 }
 
-/* Evitarea suprapunerii cu navbar-ul */
 body {
-    padding-top: 80px; /* Ajustează în funcție de înălțimea navbar-ului */
+    padding-top: 80px;
 }
 
-
-/* Titlul paginii */
 .delete-container h2 {
-    color: #ff4d4d; /* Roșu pentru a indica pericolul */
+    color: #ff4d4d;
     font-size: 24px;
     margin-bottom: 15px;
 }
 
-/* Paragraf de avertizare */
 .delete-container p {
     color: #ddd;
     font-size: 16px;
     margin-bottom: 20px;
 }
 
-/* Stilizare butoane */
 .delete-buttons {
     display: flex;
     justify-content: space-between;
@@ -67,7 +62,6 @@ body {
     background-color: #545b62;
 }
 
-/* Responsivitate */
 @media screen and (max-width: 600px) {
     .delete-container {
         width: 90%;

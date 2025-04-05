@@ -2,18 +2,20 @@
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" href="{% static 'css/item/item_delete.css' %}">
+<link rel="stylesheet" href="{% static 'css/structure/delete.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="delete-container">
     <h2>Delete Item</h2>
     <p>Are you sure you want to delete the item <strong>{{ item.product.name }}</strong> from project <strong>{{ item.project.name }}</strong>?</p>
     
     <form method="POST">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Yes, delete</button>
-        <a href="{% url 'project_read' item.project.id %}" class="btn btn-secondary">Cancel</a>
+        <div class="delete-buttons">
+            <button type="submit" class="btn-danger">Yes, delete</button>
+            <a href="{% url 'project_read' item.project.id %}" class="btn-secondary">Cancel</a>
+        </div>
     </form>
 </div>
 {% endblock %}

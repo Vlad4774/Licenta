@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" href="{% static 'css/product/product_list.css' %}">
+<link rel="stylesheet" href="{% static 'css/structure/list.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -12,24 +12,36 @@
 <table class="table">
     <thead>
         <tr>
+            <th>
+                <form method="get">
+                    <input type="text" name="name" value="{{ search_name }}" placeholder="Filter..." />
+            </th>
+            <th>
+                    <input type="text" name="short_description" value="{{ search_description }}" placeholder="Filter..." />
+            </th>
+            <th>
+                    <input type="text" name="category" value="{{ search_category }}" placeholder="Filter..." />
+            </th>
+            <th>
+                    <button type="submit" class="btn btn-filter">Apply</button>
+                </form>
+            </th>
+        </tr>
+        <tr>
             <th>Name</th>
             <th>Short Description</th>
             <th>Category</th>
-            <th>Sold To</th>
-            <th>Location</th>
             <th>Actions</th>
         </tr>
-    </thead>
+    </thead>    
     <tbody>
         {% for product in products %}
         <tr>
             <td>{{ product.name }}</td>
             <td>{{ product.short_description }}</td>
             <td>{{ product.category.name }}</td>
-            <td>{{ product.sold_to.name }}</td>
-            <td>{{ product.location }}</td>
             <td>
-                <a href="{% url 'product_edit' product.id %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'product_edit' product.id %}" class="btn btn-view">Edit</a>
                 <a href="{% url 'product_delete' product.id %}" class="btn btn-danger">Delete</a>
             </td>
         </tr>
@@ -40,4 +52,17 @@
         {% endfor %}
     </tbody>
 </table>
+
+<div class="pagination">
+    {% if products.has_previous %}
+        <a href="?page={{ products.previous_page_number }}{% if request.GET.name %}&name={{ request.GET.name }}{% endif %}{% if request.GET.short_description %}&short_description={{ request.GET.short_description }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sold_to %}&sold_to={{ request.GET.sold_to }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}">Previous</a>
+    {% endif %}
+
+    <span>Page {{ products.number }} of {{ products.paginator.num_pages }}</span>
+
+    {% if products.has_next %}
+        <a href="?page={{ products.next_page_number }}{% if request.GET.name %}&name={{ request.GET.name }}{% endif %}{% if request.GET.short_description %}&short_description={{ request.GET.short_description }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.sold_to %}&sold_to={{ request.GET.sold_to }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}">Next</a>
+    {% endif %}
+</div>
+
 {% endblock %}
