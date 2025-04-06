@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: saleshub
+    env: python
+    buildCommand: "cd saleshub && pip install -r requirements.txt"
+    startCommand: "cd saleshub && gunicorn saleshub.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: saleshub.settings
