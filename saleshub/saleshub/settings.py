@@ -131,8 +131,8 @@ AUTH_USER_MODEL = 'core.CustomUser'
 
 LOGOUT_REDIRECT_URL = 'get_started'  
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/core/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
