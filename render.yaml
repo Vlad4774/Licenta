@@ -4,8 +4,10 @@ services:
     env: python
     buildCommand: |
       pip install -r requirements.txt
-      python manage.py makemigrations
-      python manage.py migrate
       python manage.py collectstatic --noinput
-    startCommand: gunicorn saleshub.wsgi:application
+
+    startCommand: |
+      python manage.py migrate
+      gunicorn saleshub.wsgi:application
+
     staticPublishPath: staticfiles
