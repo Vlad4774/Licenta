@@ -1,0 +1,92 @@
+.edit-profile-page {
+    min-height: 80vh;
+    background-color: #121212;
+    padding: 60px 20px;
+}
+
+.edit-profile-page .container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #1f1f1f;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 188, 212, 0.05);
+    color: white;
+}
+
+.edit-profile-page h2 {
+    text-align: center;
+    color: #00bcd4;
+    font-size: 26px;
+    margin-bottom: 30px;
+}
+
+/* Etichete */
+.edit-profile-page form label {
+    display: block;
+    font-weight: bold;
+    color: #00bcd4;
+    margin-bottom: 6px;
+}
+
+/* Inputuri și câmpuri */
+.edit-profile-page form input,
+.edit-profile-page form select,
+.edit-profile-page form textarea {
+    width: 100%;
+    padding: 10px;
+    background-color: #2c2c2c;
+    border: 1px solid #00bcd4;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.edit-profile-page form input[type="file"] {
+    border: none;
+    padding-left: 0;
+}
+
+.edit-profile-page form input:focus,
+.edit-profile-page form select:focus,
+.edit-profile-page form textarea:focus {
+    outline: none;
+    border-color: #008c9e;
+    box-shadow: 0 0 6px rgba(0, 188, 212, 0.4);
+}
+
+/* Butoane */
+.edit-profile-page .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.3s ease;
+    cursor: pointer;
+}
+
+/* Submit = cyan */
+.edit-profile-page .btn-primary {
+    background-color: #00bcd4;
+    color: white;
+    border: none;
+    margin-right: 10px;
+}
+
+.edit-profile-page .btn-primary:hover {
+    background-color: #008c9e;
+}
+
+/* Cancel = gri */
+.edit-profile-page .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    text-decoration: none;
+}
+
+.edit-profile-page .btn-secondary:hover {
+    background-color: #545b62;
+}

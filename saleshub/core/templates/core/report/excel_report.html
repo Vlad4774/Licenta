@@ -6,52 +6,54 @@
 {% endblock %}
 
 {% block content %}
-<h2>Generate Excel Report</h2>
+<div class="report">
+    <h2>Generate Excel Report</h2>
 
-<form method="get" action="{% url 'generate_excel_report' %}">
-    <label>Project:</label>
-    <select name="project">
-        <option value="">All</option>
-        {% for project in projects %}
-            <option value="{{ project.id }}">{{ project.name }}</option>
-        {% endfor %}
-    </select>
+    <form method="get" action="{% url 'generate_excel_report' %}">
+        <label>Project:</label>
+        <select name="project">
+            <option value="">All</option>
+            {% for project in projects %}
+                <option value="{{ project.id }}">{{ project.name }}</option>
+            {% endfor %}
+        </select>
 
-    <label>Product:</label>
-    <select name="product">
-        <option value="">All</option>
-        {% for product in products %}
-            <option value="{{ product.id }}">{{ product.name }}</option>
-        {% endfor %}
-    </select>
+        <label>Product:</label>
+        <select name="product">
+            <option value="">All</option>
+            {% for product in products %}
+                <option value="{{ product.id }}">{{ product.name }}</option>
+            {% endfor %}
+        </select>
 
-    <label>Category:</label>
-    <select name="category">
-        <option value="">All</option>
-        {% for category in categories %}
-            <option value="{{ category.id }}">{{ category.name }}</option>
-        {% endfor %}
-    </select>
+        <label>Category:</label>
+        <select name="category">
+            <option value="">All</option>
+            {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
 
-    <label>Location:</label>
-    <select name="location">
-        <option value="">All</option>
-        {% for location in locations %}
-            <option value="{{ location.id }}">{{ location }}</option>
-        {% endfor %}
-    </select>
+        <label>Location:</label>
+        <select name="location">
+            <option value="">All</option>
+            {% for location in locations %}
+                <option value="{{ location.id }}">{{ location }}</option>
+            {% endfor %}
+        </select>
 
-    <label>Customer:</label>
-    <select name="customer">
-        <option value="">All</option>
-        {% for customer in customers %}
-            <option value="{{ customer.id }}">{{ customer.name }}</option>
-        {% endfor %}
-    </select>
+        <label>Customer:</label>
+        <select name="customer">
+            <option value="">All</option>
+            {% for customer in customers %}
+                <option value="{{ customer.id }}">{{ customer.name }}</option>
+            {% endfor %}
+        </select>
 
-    <label>Year:</label>
-    <input type="number" name="year" placeholder="Optional">
+        <label>Year:</label>
+        <input type="number" name="year" placeholder="Optional">
 
-    <button type="submit">Download Excel</button>
-</form>
+        <button type="submit">Download Excel</button>
+    </form>
+</div>
 {% endblock %}

@@ -1,0 +1,106 @@
+/* Page Title */
+h2 {
+    text-align: center;
+    color: #00bcd4;
+    margin-bottom: 30px;
+}
+
+/* Select Dropdown */
+label {
+    display: block;
+    margin: 0 auto 10px auto;
+    width: fit-content;
+    color: #00bcd4;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+select#request_type {
+    display: block;
+    margin: 0 auto 30px auto;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #2c2c2c;
+    color: white;
+    border: 1px solid #00bcd4;
+    font-size: 16px;
+    width: 250px;
+}
+
+/* Form Container */
+#form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* Forms (category, customer, location) */
+.dynamic-form {
+    background-color: #1f1f1f;
+    padding: 25px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 0 10px rgba(0, 188, 212, 0.1);
+    margin-bottom: 30px;
+}
+
+.dynamic-form label {
+    color: #00bcd4;
+    font-weight: bold;
+}
+
+.dynamic-form input,
+.dynamic-form select,
+.dynamic-form textarea {
+    width: 100%;
+    background-color: #2c2c2c;
+    color: white;
+    padding: 10px;
+    margin: 8px 0 20px;
+    border: 1px solid #00bcd4;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.dynamic-form input:focus,
+.dynamic-form textarea:focus {
+    outline: none;
+    border-color: #008c9e;
+    box-shadow: 0 0 5px rgba(0, 188, 212, 0.3);
+}
+
+/* Buttons */
+button.btn-success {
+    background-color: #00bcd4;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button.btn-success:hover {
+    background-color: #008c9e;
+}
+
+/* Admin Button */
+a.btn-info {
+    display: block;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    text-decoration: none;
+    width: fit-content;
+    margin: 0 auto 25px auto;
+    text-align: center;
+    transition: background 0.3s ease;
+}
+
+a.btn-info:hover {
+    background-color: #0056b3;
+}

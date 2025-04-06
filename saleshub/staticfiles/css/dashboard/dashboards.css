@@ -1,0 +1,93 @@
+/* Titlul general */
+.dashboard-title {
+    text-align: center;
+    color: #00bcd4;
+    font-size: 28px;
+    margin: 30px 0;
+    font-weight: 600;
+}
+
+/* Grilă 3x2 */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 0 40px 40px 40px;
+    justify-items: center;
+}
+
+/* Card individual */
+.dashboard-card {
+    background-color: #292929;
+    border: 1px solid #3a3a3a;
+    border-radius: 12px;
+    padding: 20px 20px 10px;
+    width: 100%;
+    max-width: 420px;
+    height: 305px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease;
+    position: relative;
+    padding: 20px;
+    background-color: #222;
+    border-radius: 12px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+.dashboard-card:hover {
+    transform: scale(1.015);
+}
+
+/* Titlu card */
+.dashboard-card h3 {
+    font-size: 16px;
+    color: #00bcd4;
+    margin-bottom: 12px;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Canvas pentru grafice (ex: donut) */
+canvas {
+    width: 80% !important;
+    max-width: 320px;
+    height: 210px !important;
+    display: block;
+}
+
+.see-details {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background-color: #00bcd4;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.see-details:hover {
+    background-color: #008c9e;
+}
+
+.chart-container {
+    display: flex;
+    align-items: center;      /* ← Asta aliniează vertical */
+    justify-content: center;
+    gap: 50px;
+    height: 500px;            /* ← Fixează o înălțime ca să alinieze corect pe mijloc */
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+canvas.donut-chart {
+    max-width: 500px;
+    max-height: 500px;
+    padding: 20px;
+}

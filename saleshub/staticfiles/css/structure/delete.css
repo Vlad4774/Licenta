@@ -1,0 +1,80 @@
+
+.delete-container {
+    max-width: 800px;
+    margin: 100px auto 0 auto; 
+    background-color: #1f1f1f;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+body {
+    padding-top: 80px;
+}
+
+.delete-container h2 {
+    color: #ff4d4d;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.delete-container p {
+    color: #ddd;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.delete-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.delete-buttons .btn-danger {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.delete-buttons .btn-danger:hover {
+    background-color: #cc0000;
+}
+
+.delete-buttons .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.delete-buttons .btn-secondary:hover {
+    background-color: #545b62;
+}
+
+@media screen and (max-width: 600px) {
+    .delete-container {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .delete-buttons {
+        flex-direction: column;
+    }
+
+    .delete-buttons .btn-danger,
+    .delete-buttons .btn-secondary {
+        width: 100%;
+        text-align: center;
+    }
+}

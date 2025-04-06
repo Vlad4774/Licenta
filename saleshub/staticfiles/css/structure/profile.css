@@ -1,0 +1,64 @@
+.profile-page-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 40px;
+    color: white;
+}
+
+.profile-left {
+    width: 35%;
+    background-color: #1f1f1f;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 188, 212, 0.05);
+    text-align: center;
+}
+
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #00bcd4;
+    margin-bottom: 15px;
+}
+
+.edit-btn {
+    display: inline-block;
+    margin-top: 15px;
+    background-color: #00bcd4;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+.edit-btn:hover {
+    background-color: #008c9e;
+}
+
+.profile-right {
+    flex-grow: 1;
+    background-color: #2c2c2c;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.project-list {
+    list-style: none;
+    padding: 0;
+}
+
+.project-list li {
+    margin: 10px 0;
+}
+
+.project-list a {
+    color: #00bcd4;
+    text-decoration: none;
+}
+
+.project-list a:hover {
+    text-decoration: underline;
+}

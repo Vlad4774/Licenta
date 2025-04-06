@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-)+^1g(83m_xcnwpnb$ro$9=l_hg*_yvp&^2w&s@v9q&t%#2#!0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.onrender.com', '127.0.0.1']
 
 
 # Application definition
@@ -130,6 +130,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 AUTH_USER_MODEL = 'core.CustomUser'
 
 LOGOUT_REDIRECT_URL = 'get_started'  
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 
