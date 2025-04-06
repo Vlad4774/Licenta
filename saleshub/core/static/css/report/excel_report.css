@@ -1,0 +1,43 @@
+form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #1f1f1f;
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+}
+
+form label {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #00bcd4;
+}
+
+form select, form input {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background: #2c2c2c;
+    color: white;
+}
+
+button {
+    grid-column: span 2;
+    padding: 10px;
+    background-color: #00bcd4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+h2 {
+    text-align: center;
+    color: #00bcd4;
+    font-size: 32px;
+    margin-bottom: 30px;
+}
+

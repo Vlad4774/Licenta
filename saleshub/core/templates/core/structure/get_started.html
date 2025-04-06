@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<section class="hero">
+<section class="hero" id="hero">
     <div class="container">
         <div class="hero-content">
             <h1 class="hero-title">Streamline Your Sales Planning for Maximum Growth</h1>
@@ -19,13 +19,13 @@
     </div>
 </section>
 
-<section class="features">
+<section class="features" id="features">
     <div class="container">
         <h2 class="features-title">Key Features</h2>
         <div class="features-grid">
             <div class="feature">
                 <div class="feature-icon">
-                    <img src="{% static 'images/monitor.png' %}" alt="Feature 1 Icon" />
+                    <img src="{% static 'images/monitor.webp' %}" alt="Feature 1 Icon" />
                 </div>
                 <h3 class="feature-title">Data-Driven Insights</h3>
                 <p class="feature-description">Leverage powerful analytics to make informed sales decisions.</p>
@@ -39,14 +39,14 @@
             </div>
             <div class="feature">
                 <div class="feature-icon">
-                    <img src="{% static 'images/collaboration.png' %}" alt="Feature 3 Icon" />
+                    <img src="{% static 'images/collaboration.webp' %}" alt="Feature 3 Icon" />
                 </div>
                 <h3 class="feature-title">Real-Time Collaboration</h3>
                 <p class="feature-description">Work seamlessly with your team in real-time.</p>
             </div>
             <div class="feature">
                 <div class="feature-icon">
-                    <img src="{% static 'images/graph.png' %}" alt="Feature 4 Icon" />
+                    <img src="{% static 'images/graph.jpeg' %}" alt="Feature 4 Icon" />
                 </div>
                 <h3 class="feature-title">Automated Reporting</h3>
                 <p class="feature-description">Generate reports automatically, saving time and effort.</p>
@@ -55,9 +55,9 @@
     </div>
 </section>
 
-<section class="benefits">
+<section class="benefits" id="benefits">
     <div class="container">
-        <h2 class="benefits-title">Why Choose Us?</h2>
+        <h2 class="benefits-title">Benefits</h2>
         <div class="benefits-list">
             <div class="benefit">
                 <h3 class="benefit-title">Increased Sales Efficiency</h3>
@@ -79,17 +79,13 @@
     </div>
 </section>
 
-<section class="use-cases">
+<section class="use-cases" id="use-cases">
     <div class="container">
         <h2 class="use-cases-title">Use Cases</h2>
         <div class="use-cases-list">
             <div class="use-case">
                 <h3 class="use-case-title">Sales Forecasting</h3>
                 <p class="use-case-description">Predict future sales trends based on historical data and market analysis.</p>
-            </div>
-            <div class="use-case">
-                <h3 class="use-case-title">Lead Management</h3>
-                <p class="use-case-description">Track and nurture leads throughout the sales funnel to improve conversion rates.</p>
             </div>
             <div class="use-case">
                 <h3 class="use-case-title">Performance Tracking</h3>
@@ -103,68 +99,49 @@
                 <h3 class="use-case-title">Customer Relationship Management</h3>
                 <p class="use-case-description">Manage customer interactions and data throughout the customer lifecycle.</p>
             </div>
-            <div class="use-case">
-                <h3 class="use-case-title">Automated Reporting</h3>
-                <p class="use-case-description">Generate comprehensive reports with minimal manual effort.</p>
-            </div>
         </div>
     </div>
 </section>
 
-<section class="resources">
-    <div class="container">
-        <h2 class="resources-title">Resources</h2>
-        <div class="resources-grid">
-            <div class="resource-card">
-                <h3 class="resource-title">Sales Planning Guide</h3>
-                <p class="resource-description">A comprehensive guide to planning and executing your sales strategy effectively.</p>
-                <a href="#guide" class="resource-link">Read More</a>
-            </div>
-            <div class="resource-card">
-                <h3 class="resource-title">Top 10 Sales Tips</h3>
-                <p class="resource-description">Discover the best practices for boosting your sales performance.</p>
-                <a href="#tips" class="resource-link">Read More</a>
-            </div>
-            <div class="resource-card">
-                <h3 class="resource-title">Webinar: Maximizing Sales Efficiency</h3>
-                <p class="resource-description">Join our expert-led webinar to learn strategies for improving sales efficiency.</p>
-                <a href="#webinar" class="resource-link">Register Now</a>
-            </div>
-            <div class="resource-card">
-                <h3 class="resource-title">Case Study: Successful Sales Strategies</h3>
-                <p class="resource-description">Explore real-world examples of companies that excelled in sales planning.</p>
-                <a href="#case-study" class="resource-link">Read More</a>
-            </div>
-        </div>
-    </div>
-</section>
 
-<section class="faq">
+<section class="faq" id="faq">
     <div class="container">
         <h2 class="faq-title">Frequently Asked Questions</h2>
         <div class="faq-list">
             <div class="faq-item">
-                <h3 class="faq-question">What is Sales Planning?</h3>
+                <h3 class="faq-question" type="button">What is Sales Planning?</h3>
                 <p class="faq-answer">Sales Planning is the process of setting sales goals, defining strategies, and allocating resources to achieve those goals.</p>
             </div>
             <div class="faq-item">
-                <h3 class="faq-question">How can I improve my sales efficiency?</h3>
+                <h3 class="faq-question" type="button">How can I improve my sales efficiency?</h3>
                 <p class="faq-answer">Utilize our tools to streamline processes, enhance team collaboration, and track performance metrics effectively.</p>
             </div>
             <div class="faq-item">
-                <h3 class="faq-question">What support do you offer?</h3>
-                <p class="faq-answer">We provide 24/7 customer support through chat and email, along with extensive documentation and resources.</p>
+                <h3 class="faq-question" type="button">What support do you offer?</h3>
+                <p class="faq-answer">We provide support via email or phone, but also through admin accounts.</p>
             </div>
             <div class="faq-item">
-                <h3 class="faq-question">Is there a free trial available?</h3>
-                <p class="faq-answer">Yes, we offer a 14-day free trial that allows you to explore all features of our Sales Planning tool.</p>
+                <h3 class="faq-question" type="button">Is there a testing envirnoment before buying?</h3>
+                <p class="faq-answer">Yes, you can test the app through the login/register page. If you like our app, you can contact us to give an personalized offer for your company.</p>
             </div>
             <div class="faq-item">
-                <h3 class="faq-question">Can I customize my plan?</h3>
+                <h3 class="faq-question" type="button">Can I customize my plan?</h3>
                 <p class="faq-answer">Absolutely! We offer customizable plans to fit your specific business needs and goals.</p>
             </div>
         </div>
     </div>
 </section>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const questions = document.querySelectorAll('.faq-question');
+
+        questions.forEach(question => {
+            question.addEventListener('click', function () {
+                const faqItem = this.closest('.faq-item');
+                faqItem.classList.toggle('active');
+            });
+        });
+    });
+</script>
 {% endblock %}

@@ -1,0 +1,38 @@
+{% extends "core/structure/base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/structure/profile.css' %}">
+<title>{{ user_profile.get_full_name }} | Profile</title>
+{% endblock %}
+
+{% block content %}
+<div class="profile-page-container">
+    <div class="profile-left">
+        <img class="profile-picture" src="{{ user_profile.profile_picture.url }}" alt="Profile picture">
+        <h2>{{ user_profile.get_full_name }}</h2>
+        <p>Email: {{ user_profile.email }}</p>
+
+        {% if request.user.id == user_profile.id %}
+            <a href="{% url 'edit_profile' %}" class="edit-btn">Edit Profile</a>
+        {% endif %}
+    </div>
+
+    <div class="profile-right">
+        <h3>Projects responsible:</h3>
+        {% if user_profile.project_set.all %}
+            <ul class="project-list">
+                {% for project in user_profile.project_set.all %}
+                    <li>
+                        <a href="{% url 'project_read' project.id %}">
+                            {{ project.name }} – {{ project.customer }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>This user is not responsible for any projects.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

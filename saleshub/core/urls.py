@@ -12,6 +12,7 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('register/', views.register_view, name='register'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('profile/<int:id>/', views.user_profile, name='user_profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
 
     #product
@@ -52,6 +53,10 @@ urlpatterns = [
     path('dashboard/revenue-cost/', views.dashboard_revenue_cost, name='dashboard_revenue_cost'),
     path('dashboard/volume-prediction/', views.dashboard_volume_prediciton, name='dashboard_volume_prediction'),
 
+    #Excels & search
+    path("excel-reports/", views.excel_report_view, name="excel_report"),
+    path("excel-reports/generate/", views.generate_excel_report, name="generate_excel_report"),
+    path('search/', views.search_view, name='search'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

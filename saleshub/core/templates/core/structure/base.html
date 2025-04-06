@@ -30,11 +30,11 @@
         {% if request.path|is_unregistred_page %}
         <nav class="saleshub-navigation">
             <ul>
-                <li><a href="#home">Home</a></li>
+                <li><a href="#hero">Home</a></li>
                 <li><a href="#features">Features</a></li>
-                <li><a href="#about">About Us</a></li>
-                <li><a href="#blog">Blog</a></li> 
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#benefits">Benefits</a></li>
+                <li><a href="#use-cases">Use Cases</a></li> 
+                <li><a href="#faq">FAQ</a></li>
             </ul>
 
             <div class="saleshub-auth-buttons">
@@ -45,9 +45,10 @@
         {% endif %}
 
         {% if not request.path|is_unregistred_page %}
-        <div class="saleshub-search-bar">
-            <input type="text" placeholder="Search Here" />
-        </div>
+        <form method="get" action="{% url 'search' %}" class="search-form">
+            <input type="text" name="q" placeholder="Search Here" value="{{ request.GET.q|default_if_none:'' }}">
+            <button type="submit">🔍</button>
+        </form>
 
         <div class="saleshub-profile-wrapper">
             <div class="saleshub-profile-toggle" id="profileToggle">

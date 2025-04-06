@@ -1,0 +1,31 @@
+{% extends 'core/structure/base.html' %}
+{% load static %}
+
+{% block head%}
+<link rel="stylesheet" href="{% static 'css/structure/search_result.css' %}">
+{% endblock %}
+
+{% block content %}
+{% if projects %}
+    <h3>Projects:</h3>
+    <ul>
+        {% for project in projects %}
+            <li><a href="{% url 'project_read' project.id %}">{{ project.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% if users %}
+    <h3>Profiles:</h3>
+    <ul>
+        {% for user in users %}
+            <li><a href="{% url 'user_profile' user.id %}">{{ user.get_full_name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% if not projects and not users %}
+    <p>No results found.</p>
+{% endif %}
+
+{% endblock %}

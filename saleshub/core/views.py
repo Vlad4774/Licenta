@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login as auth_login, authenticate, logout
+from django.contrib.auth import login as auth_login, authenticate, logout, get_user_model
 from django.contrib.auth.decorators import login_required 
 from .models import Product, Pricing, Volume, Cost, Project, Item, Category, Customer, Location, UserRequest
 from django.http import JsonResponse
@@ -7,15 +7,18 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import ProductForm, ProjectForm, ItemForm, CategoryRequestForm, LocationRequestForm, CustomerRequestForm, ContractUploadForm, RegisterForm, EditProfileForm
-import logging
 from django.contrib.admin.views.decorators import staff_member_required
 from decimal import Decimal
 from collections import defaultdict
 from django.contrib.auth import login
 import requests
 from django.core.paginator import Paginator
-
-logger = logging.getLogger(__name__)
+import pandas as pd
+from django.http import HttpResponse
+from openpyxl.utils.dataframe import dataframe_to_rows
+from openpyxl import Workbook
+from datetime import datetime
+from django.db.models import Q
 
 #-------------------------------------------------------------------------STRUCTURE--------------------------------------------------------------------------------
 
@@ -123,7 +126,11 @@ def edit_profile(request):
 
     return render(request, 'core/structure/edit_profile.html', {'form': form})
 
-
+User = get_user_model()
+@login_required
+def user_profile(request, id):
+    user = get_object_or_404(User, id=id)
+    return render(request, 'core/structure/profile.html', {'user_profile': user})
 
 #-------------------------------------------------------------------PRODUCT----------------------------------------------------------------------------------------
 
@@ -241,29 +248,26 @@ def create_or_edit_project(request, id=None):
 def view_project(request, id):
     project = get_object_or_404(Project, id=id)
 
-    # Upload contract
-    if request.method == "POST" and 'upload_contract' in request.POST:
-        contract_form = ContractUploadForm(request.POST, request.FILES)
-        if contract_form.is_valid():
-            contract = contract_form.save(commit=False)
+    # Form
+    if request.method == 'POST' and 'upload_contract' in request.POST:
+        form = ContractUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            contract = form.save(commit=False)
             contract.project = project
             contract.save()
-            return redirect('project_read', id=project.id)
+    else:
+        form = ContractUploadForm()
 
-    elif request.method == "POST":
-        project.dos = request.POST.get('dos')
-        project.sop = request.POST.get('sop')
-        project.eop = request.POST.get('eop')
-        project.acquisition_status = request.POST.get('acquisition_status')
-        project.acquisition_probability = request.POST.get('acquisition_probability')
-        project.save()
-        return redirect('project_read', pk=project.id)
-
-    contract_form = ContractUploadForm()
+    # Paginare items
+    items = project.items.all()
+    paginator = Paginator(items, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     return render(request, 'core/project/project_read.html', {
         'project': project,
-        'form': contract_form
+        'form': form,
+        'page_obj': page_obj,
     })
 
 @login_required
@@ -1040,6 +1044,134 @@ def dashboard_volume_prediciton(request):
         "label3": "Max Volume",
         "canvas_id": "volumeProjectionChart"
     })
+
+#----------------------------------------------------------------------EXCELS---------------------------------------------------------------------------------------------
+
+@login_required
+def excel_report_view(request):
+    projects = Project.objects.all()
+    products = Product.objects.all()
+    categories = Category.objects.all()
+    locations = Location.objects.all()
+    customers = Customer.objects.all()
+    
+    return render(request, 'core/report/excel_report.html', {
+        'projects': projects,
+        'products': products,
+        'categories': categories,
+        'locations': locations,
+        'customers': customers,
+    })
+
+@login_required
+def generate_excel_report(request):
+    filters = {
+        "project": request.GET.get("project"),
+        "product": request.GET.get("product"),
+        "category": request.GET.get("category"),
+        "location": request.GET.get("location"),
+        "customer": request.GET.get("customer"),
+        "year": request.GET.get("year"),
+    }
+
+    items = Item.objects.select_related('product', 'project', 'location', 'sold_to')
+    if filters["project"]:
+        items = items.filter(project__id=filters["project"])
+    if filters["product"]:
+        items = items.filter(product__id=filters["product"])
+    if filters["category"]:
+        items = items.filter(product__category__id=filters["category"])
+    if filters["location"]:
+        items = items.filter(location__id=filters["location"])
+    if filters["customer"]:
+        items = items.filter(sold_to__id=filters["customer"])
+
+    data = []
+    for item in items:
+        volumes = item.volume.all()
+        pricings = item.pricing.all()
+        costs = item.costing.all()
+
+        if filters["year"]:
+            volumes = volumes.filter(year=filters["year"])
+            pricings = pricings.filter(year=filters["year"])
+            costs = costs.filter(year=filters["year"])
+
+        for year in range(item.schedule_years):
+            y = int(filters["year"]) if filters["year"] else item.project.dos.year + year
+            vol = volumes.filter(year=y).first()
+            price = pricings.filter(year=y).first()
+            cost = costs.filter(year=y).first()
+
+            data.append([
+                item.project.name,
+                item.product.name,
+                str(item),
+                str(item.location),
+                item.product.short_description,
+                item.product.category.name if item.product.category else '',
+                y,
+                vol.min_volume if vol else '',
+                vol.expected_volume if vol else '',
+                vol.max_volume if vol else '',
+                price.base_price if price else '',
+                price.packaging_price if price else '',
+                price.transport_price if price else '',
+                price.warehouse_price if price else '',
+                cost.base_cost if cost else '',
+                cost.labor_cost if cost else '',
+                cost.material_cost if cost else '',
+                cost.overhead_cost if cost else '',
+            ])
+
+    df = pd.DataFrame(data, columns=[
+        "Project", "Product", "Item", "Location", "Short Description", "Category",
+        "Year", "Min Volume", "Expected Volume", "Max Volume",
+        "Base Price", "Packaging Price", "Transport Price", "Warehouse Price",
+        "Base Cost", "Labor Cost", "Material Cost", "Overhead Cost"
+    ])
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    filename = f"excel_report_{datetime.now().strftime('%Y-%m-%d_%H-%M')}.xlsx"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Sales Report"
+
+    for r in dataframe_to_rows(df, index=False, header=True):
+        ws.append(r)
+
+    wb.save(response)
+    return response
+
+def search_view(request):
+    query = request.GET.get('q')
+    projects = []
+    users = []
+
+    if query:
+        projects = Project.objects.filter(
+            Q(name__icontains=query) |
+            Q(customer__name__icontains=query) |
+            Q(responsible__first_name__icontains=query) |
+            Q(responsible__last_name__icontains=query)
+        )
+
+        users = User.objects.filter(
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(email__icontains=query)
+        )
+
+    return render(request, 'core/structure/search_result.html', {
+        'query': query,
+        'projects': projects,
+        'users': users
+    })
+
+
+
 
 
 
